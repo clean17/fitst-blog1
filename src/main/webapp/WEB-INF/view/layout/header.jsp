@@ -42,51 +42,10 @@
                     </li>
                 </ul>
                 <div>
-                    <a href="/user/profileUpdate"><img src="images/profile.jfif" style="width: 35px;"
+                    <a href="/user/profileUpdate"><img src="/images/profile.jpeg" style="width: 35px;"
                             class="rounded-circle" alt="Cinque Terre"></a>
                 </div>
             </div>
 
         </div>
     </nav>
-
-    <div class="container my-3">
-        <div class="container">
-            <form action="/join" method="post" onsubmit="return valid()">
-                <div class="form-group mb-2">
-                    <input type="text" name="username" class="form-control" placeholder="Enter username" id="username">
-                </div>
-
-                <div class="form-group mb-2">
-                    <input type="password" name="password" class="form-control" placeholder="Enter password"
-                        id="password">
-                </div>
-
-                <div class="form-group mb-2">
-                    <input type="password" class="form-control" placeholder="Enter passwordCheck" id="passwordCheck">
-                </div>
-
-                <div class="form-group mb-2">
-                    <input type="email" name="email" class="form-control" placeholder="Enter email" id="email">
-                </div>
-
-                <button type="submit" class="btn btn-primary">회원가입</button>
-            </form>
-
-        </div>
-    </div>
-
-    <script>
-        function valid() {
-            alert("회원가입 유효성 검사");
-        }
-    </script>
-
-    <div class="mt-4 p-5 bg-dark text-white rounded text-center" style="margin-bottom: 0">
-        <p>Created by MetaCoding</p>
-        <p>📞 010-2222-7777</p>
-        <p>🏴 부산 수영구 XX동</p>
-    </div>
-</body>
-
-</html>

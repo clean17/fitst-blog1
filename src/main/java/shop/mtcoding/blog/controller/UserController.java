@@ -9,19 +9,19 @@ public class UserController {
     @GetMapping("/")
     public String main(){
     
-        return "main" ;
+        return "user/main" ;
     }
 
     @GetMapping("/joinForm")
     public String joinForm(){
     
-        return "joinForm";
+        return "user/joinForm";
     }
 
     @GetMapping("/loginForm")
     public String loginForm(){
     
-        return "loginForm";
+        return "user/loginForm";
     }
 
     @GetMapping("/logout")
@@ -30,4 +30,9 @@ public class UserController {
         return "";
     }
     
+    @GetMapping("/updateForm")
+    public String logou111t(){
+    
+        return "user/updateForm";
+    }
 }
