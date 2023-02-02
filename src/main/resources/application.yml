@@ -16,12 +16,12 @@ spring:
     view:
       prefix: /WEB-INF/view/
       suffix: .jsp    
-#   sql:
-#     init:
-#       schema-locations:
-#       - classpath:db/table.sql
-#       data-locations:
-#       - classpath:db/data.sql
+  sql:
+    init:
+      schema-locations:
+      - classpath:db/table.sql
+      data-locations:
+      - classpath:db/data.sql
   h2:
     console:
       enabled: true
