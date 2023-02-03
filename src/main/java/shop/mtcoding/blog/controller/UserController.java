@@ -31,12 +31,6 @@ public class UserController {
         return "user/main" ;
     }
 
-    @GetMapping("/22")
-    @ResponseBody
-    public String test(){
-        return Script.href("/");
-    }
-
     @GetMapping("/joinForm")
     public String joinForm(){
     
@@ -55,9 +49,9 @@ public class UserController {
         session.invalidate();
         return Script.href("/");
     }
-    
-    @GetMapping("/updateForm")
-    public String logou111t(){
+
+    @GetMapping("/user/updateForm")
+    public String updateForm(){
     
         return "user/updateForm";
     }

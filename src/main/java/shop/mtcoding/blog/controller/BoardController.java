@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class BoardController {
     
-    @GetMapping("/ddfd")
-    public String df(){
-        return "";
+    @GetMapping("/board/writeForm")
+    public String writeForm(){
+        return "/board/writeForm";
     }
 }
