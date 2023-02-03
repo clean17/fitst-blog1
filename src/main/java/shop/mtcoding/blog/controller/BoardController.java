@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blog.model.BoardRepository;
-import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.util.Script;
 

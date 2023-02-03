@@ -1,16 +1,20 @@
 package shop.mtcoding.blog.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import shop.mtcoding.blog.model.Board;
+import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.model.UserRepository;
@@ -23,11 +27,15 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
+    private BoardRepository boardRepository;
+
+    @Autowired
     private HttpSession session;
 
     @GetMapping("/")
-    public String main(){
-    
+    public String main(Model model){
+        List<Board> boardList = boardRepository.findAll();
+        model.addAttribute("boardList", boardList);    
         return "user/main" ;
     }
 

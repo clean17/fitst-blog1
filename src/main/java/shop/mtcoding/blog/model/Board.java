@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Borad {
+public class Board {
     private int id;
     private String title;
     private String body;
