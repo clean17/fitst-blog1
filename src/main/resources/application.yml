@@ -5,7 +5,7 @@ server:
       charset: utf-8
       force: true
     session:
-      timeout: 600
+      timeout: 1800
 spring:
   datasource:
     url: jdbc:h2:mem:test;MODE=MySQL
