@@ -14,4 +14,15 @@ public interface UserRepository {
         @Param("username") String username,
         @Param("password") String password
     );
+    public int insertUser(
+    @Param("username") String username,
+    @Param("password") String password,
+    @Param("email") String email
+    );
+
+    public int updateUser(
+    @Param("password") String password,
+    @Param("email") String email,
+    @Param("id") int id
+    );
 }

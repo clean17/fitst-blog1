@@ -13,7 +13,7 @@
                         id="password">
                 </div>
 
-                <button type="submit" id="login-btn" class="btn btn-primary">로그인</button>
+                <button type="button" id="login-btn" class="btn btn-primary">로그인</button>
             </form>
 
         </div>
@@ -27,7 +27,7 @@
             }else{
                 // alert('아이디 또는 비밀번호가 다릅니다'); 
         				// 회원가입 버튼누르면 뜬다
-          return false;
+                return false;
             }
             
         }
@@ -58,12 +58,7 @@
                 
             });         
         });
-        function login(){
-
-        
-
-        }
-
+       
     </script>
 
 <%@ include file="../layout/footer.jsp" %>

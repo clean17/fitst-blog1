@@ -10,5 +10,15 @@
 
     <select id="findByUsernameAndPassword" resultType="shop.mtcoding.blog.model.User">
       select * from user_tb where username = #{username} and password = #{password}
-  </select>
+    </select>
+
+    <insert id="insertUser">
+      insert into user_tb ( username, password, email, created_at ) values ( #{username}, #{password}, #{email}, now())
+    </insert>
+
+    <update id="updateUser">
+      update user_tb set 
+      password = #{password}, email = #{email}
+      where id = #{id}
+    </update>
 </mapper>

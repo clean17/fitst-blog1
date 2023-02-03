@@ -63,7 +63,7 @@ public class UserController {
         String password = param.get("password").toString();
 
         if ( username == null || username.isEmpty() || password == null || password.isEmpty()){
-            return new ResponseDto<>(1, "아이디가 비밀번호가 비었습니다",null);
+            return new ResponseDto<>(1, "아이디 또는 비밀번호가 비었습니다",null);
         }
         User principal = userRepository.findByUsernameAndPassword(username, password);
         if ( principal == null ) {
@@ -72,6 +72,46 @@ public class UserController {
             // Cookie cookie = new Cookie("remember",username);
             session.setAttribute("principal", principal);
             return new ResponseDto<>(1, "로그인 성공", true);
+        }
+    }
+ 
+    @PostMapping("/join")
+    @ResponseBody
+    public ResponseDto<?> join(@RequestBody Map<String, Object> param){
+        String username = param.get("username").toString();
+        String password = param.get("password").toString();
+        String email = param.get("email").toString();
+    
+        if( username == null || username.isEmpty() || password == null || password.isEmpty() || email == null || email.isEmpty() ){
+            return new ResponseDto<>(1, "필수 입력창을 확인하세요",null);
+        }
+        int result = userRepository.insertUser( username, password, email);
+        if( result != 1 ) {
+            return new ResponseDto<>(1, "DB 에러",false);
+        }else{
+            return new ResponseDto<>(1, "회원 가입 성공",true);
+        }
+    }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public ResponseDto<?> update(@RequestBody Map<String, Object> param){
+        String password = param.get("password").toString();
+        String email = param.get("email").toString();
+
+        User principal = (User)session.getAttribute("principal");
+        if( principal == null ){
+            return new ResponseDto<>(1, "로그인 풀림",false);
+        }
+
+        if( password == null || password.isEmpty() || email == null || email.isEmpty() ){
+            return new ResponseDto<>(1, "필수 입력창을 확인하세요",null);
+        }
+        int result = userRepository.updateUser( password, email, principal.getId());
+        if( result != 1 ) {
+            return new ResponseDto<>(1, "DB 에러",false);
+        }else{
+            return new ResponseDto<>(1, "수정 완료",true);
         }
     }
 }
