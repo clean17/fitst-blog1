@@ -50,7 +50,9 @@
                     alert(res.msg);
                     loginSuccess = false;
                 }else{
+                    alert(res.msg);
                     loginSuccess = true;
+                    location.href="/";
                 }           
             }).fail((err) => {
                 
