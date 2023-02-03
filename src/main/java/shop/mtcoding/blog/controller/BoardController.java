@@ -4,11 +4,13 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import shop.mtcoding.blog.dto.BoardDto;
 import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.util.Script;
@@ -28,7 +30,12 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}")
-    public String detail(@PathVariable int id){
+    public String detail(@PathVariable int id, Model model){
+        BoardDto board = boardRepository.findById(id);
+        if ( board == null ){
+            return "redirect:/errorpage";
+        }
+        model.addAttribute("board", board);
         return "board/detail";
     }
 
