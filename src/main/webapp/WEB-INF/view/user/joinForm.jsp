@@ -6,7 +6,7 @@
             <form action="/join" method="post" onsubmit="return valid()">
                 <div class="d-flex form-group mb-2">
                     <input type="text" name="username" class="form-control" placeholder="Enter username" id="username">
-                    <button type="button" class="badge bg-secondary ms-2" id="usernameCheck">중복확인</button>
+                    <button type="button" class="badge bg-secondary ms-2" id="usernameCheck" onclick="sameCheck">중복확인</button>
                 </div>
 
                 <div class="form-group mb-2">
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <script>
+    <script>    
         let loginSuccess = false;
 
         function valid(){
@@ -38,8 +38,7 @@
                 // alert('아이디 또는 비밀번호가 다릅니다'); 
         				// 회원가입 버튼누르면 뜬다
                 return false;
-            }
-            
+            }            
         }
         $('#join-btn').click(()=>{
             let logindata = {

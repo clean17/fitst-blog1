@@ -74,6 +74,20 @@ public class UserController {
             return new ResponseDto<>(1, "로그인 성공", true);
         }
     }
+
+    @PostMapping("/usernameCheck")
+    public @ResponseBody ResponseDto<?> check(@RequestBody Map<String, Object> param){     	
+        String username = param.get("username").toString();
+
+        if( username == null || username.isEmpty()){  
+            return new ResponseDto<>(-1,"username을 입력해주세요",null);
+        }
+        if ( username.equals("ssar")){
+            return new ResponseDto<>(1,"동일한 username이 존재", false);
+        }else{
+            return new ResponseDto<>(1,"해당 username으로 회원가입 가능", true);
+        }
+    }  
  
     @PostMapping("/join")
     @ResponseBody
