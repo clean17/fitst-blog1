@@ -5,7 +5,7 @@
 
 <mapper namespace="shop.mtcoding.blog.model.BoardRepository">
     <select id="findAll" resultType="shop.mtcoding.blog.model.Board">
-        select * from board_tb
+        select * from board_tb 
     </select>
 
     <select id="findById" resultType="shop.mtcoding.blog.dto.BoardDto">
@@ -22,10 +22,10 @@
     </insert>
 
     <delete id="deleteBoard">
-        delete from * board_tb where user_id = #{userId}
+        delete from board_tb where id = #{id}
     </delete>
 
     <update id="updateBoard">
-        update board_tb set title=#{title}, body=#{body} where user_id=#{userId}
+        update board_tb set title=#{title}, body=#{body} where id=#{id}
     </update>
 </mapper>

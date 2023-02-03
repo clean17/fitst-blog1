@@ -2,15 +2,15 @@
 <%@ include file="../layout/header.jsp" %>
 
     <div class="container my-3">
-        <form action="/boardWrite" method="post" class="mb-1">
+        <form>
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Enter title" name="title" id="title">
             </div>
 
             <div class="form-group">
-                <textarea class="form-control summernote" rows="5" id="content" name="content"></textarea>
+                <textarea class="form-control summernote" rows="5" id="content" name="content" value=""></textarea>
             </div>
-            <button type="submit"  class="btn btn-primary">글쓰기완료</button>
+            <button type="button" onclick="writeBoard()" class="btn btn-primary">글쓰기완료</button>
         </form>
 
 
@@ -21,24 +21,34 @@
             tabsize: 2,
             height: 400
         });
-        let boardSuccess = false;
-    
-        // function writeBoard(){
-        //     $.ajax({
-        //         type: "get",
-        //         url: "/boardWrite",                
-        //         dataType:"json"
-        //     }).done((res) => {
-        //         if( res.data != true){
-        //             alert(res.msg);
-        //         }else{
-        //             alert(res.msg);
-        //             location.href="/";
-        //         }
-        //     }).fail((err) => {
-        //         alert(res.msg);
-        //     });    
-        // }        
+
+        function writeBoard(){
+            let post = {
+                title: $('#title').val(),
+                content: $('#content').val()
+            }
+            console.log(JSON.stringify(post)); 
+            $.ajax({
+                type: "post",
+                url: "/boardWrite",
+                data: JSON.stringify(post),
+                headers:{
+                    "content-type":"application/json; charset=utf-8"
+                },
+                dataType:"json"
+            }).done((res) => {
+                if(res.code !== 1 )
+                    location.href="#";
+                if(res.data === true){
+                    alert(res.msg);
+                    window.location.href='/';
+                }else{
+                    alert(res.msg);
+                }
+            }).fail((err) => {
+            
+            });    
+        }        
     </script>
 
 <%@ include file="../layout/footer.jsp" %>

@@ -14,13 +14,14 @@ public interface BoardRepository {
         @Param("body") String body,
         @Param("userId") int userId
     );
-    public int deleteBoard(int userId); 
+    public int deleteBoard(int id); 
 
     public int updateBoard(
         @Param("title") String title,
         @Param("body") String body,
-        @Param("userId") int userId
+        @Param("id") int id
     );
     public List<Board> findAll();
     public BoardDto findById(int id);
 }
+

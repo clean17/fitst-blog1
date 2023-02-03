@@ -2,10 +2,13 @@
 <%@ include file="../layout/header.jsp" %>
 
     <div class="container my-3">
-        <div class="mb-3">
-            <a href="/board/1/updateForm" class="btn btn-warning">수정</a>
-            <button id="btn-delete" class="btn btn-danger">삭제</button>
+    <c:if test="${principal.username == board.username}" >
+    <div class="mb-3">
+            <a href="/board/${board.id}/updateForm" class="btn btn-warning">수정</a>
+            <button id="btn-delete" class="btn btn-danger" onclick="deleteBoard()">삭제</button>
         </div>
+    </c:if>
+        
 
         <div class="mb-2">
             글 번호 : <span id="id">${board.id}<i> </i></span> 작성자 : <span class="me-3"><i>${board.username} </i></span> 
@@ -46,4 +49,26 @@
         </div>
     </div>
 
+    <script>
+        function deleteBoard(){
+        
+            $.ajax({
+                type: "delete",
+                url: `/board/${board.id}/delete`,
+                dataType:"json"                
+            }).done((res) => {
+                if ( res.code !== 1) 
+                    alert(res.msg);
+                    location.href='/errorpage';
+                if ( res.data == true){
+                    alert(res.msg);
+                    location.href='/';
+                }else{
+                    alert(res.msg);
+                }
+            }).fail((err) => {
+            
+            });
+        }
+    </script>
 <%@ include file="../layout/footer.jsp" %>

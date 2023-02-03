@@ -33,7 +33,7 @@
             }
             console.log(JSON.stringify(logindata));
             $.ajax({
-                type: "post",
+                type: "put",
                 url: "/update",
                 data: JSON.stringify(logindata),
                 headers:{
@@ -45,7 +45,7 @@
                     alert(res.msg);                    
                 }else{
                     alert(res.msg);           
-                    location.href="#";
+                    location.href="/";
                 }           
             }).fail((err) => {
                 

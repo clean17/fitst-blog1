@@ -3,22 +3,22 @@ create table user_tb (
     username varchar not null unique,
     password varchar not null,
     email varchar not null,
-    created_at timestamp
+    created_at timestamp not null
 );
 
 create table board_tb (
     id int auto_increment primary key,
     title varchar,
-    body varchar,
+    body longtext,
     user_id int not null,
-    created_at timestamp
+    created_at timestamp not null
 );
 
 create table reply_tb (
     id int auto_increment primary key,
     body varchar,
     user_id int not null,
-    created_at timestamp
+    created_at timestamp not null
 );
 
 create table love_tb (

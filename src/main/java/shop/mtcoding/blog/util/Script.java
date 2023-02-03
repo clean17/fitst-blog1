@@ -6,16 +6,22 @@ public class Script {
         sb.append("<script>");
         sb.append("location.href='"+href+"'");
         sb.append("</script>");
-        String returnString = sb.toString();
-        return returnString;
+        return sb.toString();
     }
-    public static String hrefAlert(String msg, String path){
+    public static String href(String msg, String path){
         StringBuilder sb = new StringBuilder();
         sb.append("<script>");
         sb.append("alert('"+msg+"');");
         sb.append("location.href='"+path+"';");
         sb.append("</script>");
-        String returnString = sb.toString();
-        return returnString;
+        return sb.toString();
+    }
+    public static String back(String msg){
+        StringBuilder sb = new StringBuilder();
+        sb.append("<script>");
+        sb.append("alert('"+msg+"');");
+        sb.append("history.back();");
+        sb.append("</script>");
+        return sb.toString();
     }
 }
