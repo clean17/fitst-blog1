@@ -1,32 +1,18 @@
 <script>
-    $('.summernote').summernote({
-        tabsize: 2,
-        height: 400
-    });
-    function update() {
-        let post = {
-            title: $('#title').val(),
-            content: $('#content').val()
-        }
+    function deleteBoard() {
         $.ajax({
-            type: "put",
-            url: "/borad/${board.id}/update",
-            data: JSON.stringify(post),
-            headers: {
-                "content-type": "application/json; charset=utf-8"
-            },
+            type: "delete",
+            url: `/board/${board.id}/delete`,
             dataType: "json"
         }).done((res) => {
-            if (res.code === -1) {
+            if (res.code === -1)
                 alert(res.msg);
-                location.href = '/loginForm';
-            }
+                location.href = '/errorpage';
             if (res.data === true) {
                 alert(res.msg);
-                location.href = '/board/${board.id}';
+                location.href = '/';
             } else {
                 alert(res.msg);
-                location.href = '/';
             }
         }).fail((err) => {
 

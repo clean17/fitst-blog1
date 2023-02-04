@@ -82,7 +82,7 @@ public class BoardController {
         }
         int result = boardService.글수정하기(title, content, id, principal.getUsername());
         if( result != 1){
-            return new ResponseDto<>( 1, "글 수정에 실패했습니다.",false);
+            return new ResponseDto<>( 1, "글 수정을 실패했습니다.",false);
         }
         BoardDto board = boardRepository.findById(id);
         model.addAttribute("board", board);
@@ -94,21 +94,17 @@ public class BoardController {
     public ResponseDto<?> boardWrite(@RequestBody Map<String, Object> param){
         String title = param.get("title").toString();
         String content = param.get("content").toString();
-        // System.out.println(title);
-        // System.out.println(content);
+
         User principal = (User)session.getAttribute("principal");
         if( principal == null ){
-            return new ResponseDto<>(-1, "로그인 풀림",null);
-            // return Script.href("errorpage");
+            return new ResponseDto<>( -1, "로그인이 필요한 페이지입니다",null);
         }
-        int result = boardRepository.insertBoard(title, content, principal.getId());
+
+        int result = boardService.글쓰기(title, content, principal.getId());
         if ( result != 1 ){
             return new ResponseDto<>(1, "글 쓰기 실패",false);
-            // return Script.href("errorpage");
-        }else{
-            return new ResponseDto<>(1, "글 쓰기 성공",true);            
-            // return Script.href("글 쓰기 성공","/");
         }
+        return new ResponseDto<>(1, "글 쓰기 성공",true);            
     }
 
     @DeleteMapping("/board/{id}/delete")
@@ -116,16 +112,12 @@ public class BoardController {
     public ResponseDto<?> boardDelete(@PathVariable int id){        
         User principal = (User)session.getAttribute("principal");
         if( principal == null ){
-            return new ResponseDto<>(-1, "로그인 풀림",null);
-            // return Script.href("errorpage");
+            return new ResponseDto<>( -1, "로그인이 필요한 페이지입니다",null);
         }
-        int result = boardRepository.deleteBoard(id);
+        int result = boardService.글삭제하기(id, principal.getUsername());
         if ( result != 1 ){
-            return new ResponseDto<>(1, "글 삭제 실패",false);
-            // return Script.href("errorpage");
-        }else{
-            return new ResponseDto<>(1, "글 삭제 성공",true);            
-            // return Script.href("글 쓰기 성공","/");
+            return new ResponseDto<>(1, "글 삭제를 실패했습니다.",false);
         }
+        return new ResponseDto<>(1, "삭제 완료",true);            
     }
 }

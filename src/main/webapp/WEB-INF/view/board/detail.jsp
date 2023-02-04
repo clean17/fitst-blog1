@@ -49,15 +49,15 @@
 
     <script>
         function deleteBoard(){
-        
             $.ajax({
                 type: "delete",
                 url: `/board/${board.id}/delete`,
                 dataType:"json"                
             }).done((res) => {
-                if ( res.code !== 1) 
+                if ( res.code === -1) {
                     alert(res.msg);
                     location.href='/errorpage';
+                }                    
                 if ( res.data == true){
                     alert(res.msg);
                     location.href='/';
@@ -65,7 +65,7 @@
                     alert(res.msg);
                 }
             }).fail((err) => {
-            
+                alert('실패')
             });
         }
     </script>
