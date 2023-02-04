@@ -30,7 +30,7 @@
             console.log(JSON.stringify(post)); 
             $.ajax({
                 type: "post",
-                url: "/boardWrite",
+                url: "/board/Write",
                 data: JSON.stringify(post),
                 headers:{
                     "content-type":"application/json; charset=utf-8"

@@ -52,24 +52,9 @@ public class UserController {
     }
 
     @PostMapping("/usernameCheck")
-    // public @ResponseBody ResponseDto<?> usernameCheck(@RequestBody UsernameCheckDto usernameDto){
     public @ResponseBody ResponseDto<?> usernameCheck(@RequestBody Map<String, Object> param){
-        // String username = usernameDto.getUsername();
         String username = param.get("username").toString();
-        // System.out.println("파람"+username);
-        if( username == null || username.isEmpty()){  
-            return new ResponseDto<>(-1,"username을 입력해주세요",null);
-        }
-        List<User> userList = userRepository.findAll();
-        long result = userList.stream()
-                .map(e->e.getUsername())
-                .filter(e->e.equalsIgnoreCase(username))
-                .count();
-        if ( result > 0 ){ 
-            return new ResponseDto<>(1,"동일한 username : " + username + "이 존재", false);
-        }else{
-            return new ResponseDto<>(1, username + " 사용 가능", true);
-        }
+        return userService.중복체크(username);
     }
     
     @PostMapping("/join")
@@ -84,14 +69,13 @@ public class UserController {
             throw new CustomException("email을 작성해주세요");
         }
 
-        int result = userRepository.insertUser( joinReqDto.getUsername(), joinReqDto.getPassword(), joinReqDto.getEmail());
-        if( result != 1 ) {
-            throw new CustomException("회원가입 실패");
-            // return new ResponseDto<>(1, "DB 에러",false);
-        }else{
-            // return new ResponseDto<>(1, "회원 가입 성공",true);
-            return "redirect:/loginForm";      
+        int result = userService.회원가입(joinReqDto);
+        if (result != 1) {
+            throw new CustomException("회원가입실패");
         }
+            // return new ResponseDto<>(1, "DB 에러",false);
+            // return new ResponseDto<>(1, "회원 가입 성공",true);
+        return "redirect:/loginForm";      
         //  return Script.href("회원가입 성공", "/loginForm");
     }
 

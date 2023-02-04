@@ -14,6 +14,9 @@ public interface UserRepository {
         @Param("username") String username,
         @Param("password") String password
     );
+
+    public User findByUsername(String username);
+
     public int insertUser(
     @Param("username") String username,
     @Param("password") String password,

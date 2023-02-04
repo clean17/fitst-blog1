@@ -14,7 +14,6 @@
             글 번호 : <span id="id">${board.id}<i> </i></span> 작성자 : <span class="me-3"><i>${board.username} </i></span> 
             <i id="heart" class="fa-regular fa-heart my-xl my-cursor"></i>
         </div>
-
         <div>
             <h3>${board.title}</h3>
         </div>
@@ -23,7 +22,6 @@
             <div>${board.body}</div>
         </div>
         <hr />
-
         <div class="card">
             <form>
                 <div class="card-body">

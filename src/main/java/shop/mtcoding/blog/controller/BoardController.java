@@ -22,18 +22,22 @@ import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.model.UserRepository;
+import shop.mtcoding.blog.service.BoardService;
 
 @Controller
 public class BoardController {
 
     @Autowired
     private BoardRepository boardRepository;
-
-    @Autowired
-    private UserRepository userRepository;
     
     @Autowired
     private HttpSession session;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BoardService boardService;
 
     @GetMapping("/")
     public String main(Model model){
@@ -43,12 +47,10 @@ public class BoardController {
         model.addAttribute("boardList", boardList);    
         return "user/main" ;
     }
-    
     @GetMapping("/board/writeForm")
     public String writeForm(){
         return "/board/writeForm";
     }
-
     @GetMapping("/board/{id}")
     public String detail(@PathVariable int id, Model model){
         BoardDto board = boardRepository.findById(id);
@@ -58,7 +60,6 @@ public class BoardController {
         model.addAttribute("board", board);
         return "board/detail";
     }
-
     @GetMapping("/board/{id}/updateForm")
     public String updateForm(@PathVariable int id, Model model){
         BoardDto board = boardRepository.findById(id);
@@ -68,31 +69,27 @@ public class BoardController {
         model.addAttribute("board", board);
         return "board/updateForm";
     }
-   
     @PutMapping("/borad/{id}/update")
     @ResponseBody
-    public ResponseDto<?> boardUpdate(@PathVariable int id, @RequestBody Map<String, Object> param){
-        // System.out.println("파람 : "+ param);
+    public ResponseDto<?> boardUpdate(@PathVariable int id, 
+        @RequestBody Map<String, Object> param, Model model){
         String title = param.get("title").toString();
         String content = param.get("content").toString();
-        // System.out.println("파람 : "+ title);
-        // System.out.println("파람 : "+ content);
+
         User principal = (User)session.getAttribute("principal");
         if( principal == null ){
-            return new ResponseDto<>( -1, "로그인 풀림",false);
-            // return Script.href("errorpage");
+           return new ResponseDto<>( -1, "로그인이 필요한 페이지입니다",null);
         }
-        int result = boardRepository.updateBoard(title, content, id);
-        if ( result != 1 ){
-            return new ResponseDto<>(1, "글 수정 실패",false);
-            // return Script.href("errorpage");
-        }else{
-            return new ResponseDto<>(1, "글 수정 성공",true);            
-            // return Script.href("글 수정 성공","/board/"+id);
+        int result = boardService.글수정하기(title, content, id, principal.getUsername());
+        if( result != 1){
+            return new ResponseDto<>( 1, "글 수정에 실패했습니다.",false);
         }
+        BoardDto board = boardRepository.findById(id);
+        model.addAttribute("board", board);
+        return new ResponseDto<>( 1, "수정 완료",true);
     }
 
-    @PostMapping("/boardWrite")
+    @PostMapping("/board/Write")
     @ResponseBody
     public ResponseDto<?> boardWrite(@RequestBody Map<String, Object> param){
         String title = param.get("title").toString();

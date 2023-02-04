@@ -25,7 +25,6 @@
                 title: $('#title').val(),
                 content: $('#content').val()
             }
-            console.log(JSON.stringify(post)); 
             $.ajax({
                 type: "put",
                 url: "/borad/${board.id}/update",
@@ -35,13 +34,16 @@
                 },
                 dataType:"json"
             }).done((res) => {
-                if(res.code !== 1 )
-                    location.href="/";
+                if(res.code === -1 ){
+                    alert(res.msg);
+                    location.href='/loginForm';
+                }
                 if(res.data === true){
                     alert(res.msg);
-                    window.location.href='/board/${board.id}';
-                }else{
+                    location.href='/board/${board.id}';
+                }else{  
                     alert(res.msg);
+                    location.href='/';
                 }
             }).fail((err) => {
             

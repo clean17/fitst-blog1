@@ -1,39 +1,35 @@
 <script>
-    let loginSuccess = false;
-
-    function valid() {
-        if (loginSuccess) {
-            return true;
-        } else {
-            return false;
+    $('.summernote').summernote({
+        tabsize: 2,
+        height: 400
+    });
+    function update() {
+        let post = {
+            title: $('#title').val(),
+            content: $('#content').val()
         }
-
-    }
-    $('#login-btn').click(() => {
-        let logindata = {
-            username: $('#username').val(),
-            password: $('#password').val()
-        }
-        console.log(JSON.stringify(logindata));
         $.ajax({
-            type: "post",
-            url: "/login",
-            data: JSON.stringify(logindata),
+            type: "put",
+            url: "/borad/${board.id}/update",
+            data: JSON.stringify(post),
             headers: {
                 "content-type": "application/json; charset=utf-8"
             },
             dataType: "json"
         }).done((res) => {
-            if (res.data != true) {
+            if (res.code === -1) {
                 alert(res.msg);
-                loginSuccess = false;
+                location.href = '/loginForm';
+            }
+            if (res.data === true) {
+                alert(res.msg);
+                location.href = '/board/${board.id}';
             } else {
                 alert(res.msg);
-                loginSuccess = true;
-                location.href = "/";
+                location.href = '/';
             }
         }).fail((err) => {
 
         });
-    });
+    }
 </script>
