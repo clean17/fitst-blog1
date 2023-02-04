@@ -5,12 +5,12 @@
         <div class="container">
             <form action="/login" method="post" onsubmit="return valid()">
                 <div class="form-group mb-2">
-                    <input type="text" name="username" class="form-control" placeholder="Enter username" id="username">
+                    <input type="text" name="username" class="form-control" placeholder="Enter username" id="username" required>
                 </div>
 
                 <div class="form-group mb-2">
                     <input type="password" name="password" class="form-control" placeholder="Enter password"
-                        id="password">
+                        id="password" required>
                 </div>
 
                 <button type="button" id="login-btn" class="btn btn-primary">로그인</button>
@@ -25,8 +25,6 @@
             if ( loginSuccess ){
                 return true;
             }else{
-                // alert('아이디 또는 비밀번호가 다릅니다'); 
-        				// 회원가입 버튼누르면 뜬다
                 return false;
             }
             
@@ -58,7 +56,6 @@
                 
             });         
         });
-       
     </script>
 
 <%@ include file="../layout/footer.jsp" %>

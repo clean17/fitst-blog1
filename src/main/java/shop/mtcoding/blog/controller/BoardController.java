@@ -1,5 +1,6 @@
 package shop.mtcoding.blog.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blog.dto.board.BoardDto;
+import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
+import shop.mtcoding.blog.model.UserRepository;
 
 @Controller
 public class BoardController {
@@ -27,7 +30,19 @@ public class BoardController {
     private BoardRepository boardRepository;
 
     @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
     private HttpSession session;
+
+    @GetMapping("/")
+    public String main(Model model){
+        User principal = userRepository.findByUsernameAndPassword("ssar", "1234");
+        session.setAttribute("principal", principal);
+        List<Board> boardList = boardRepository.findAll();
+        model.addAttribute("boardList", boardList);    
+        return "user/main" ;
+    }
     
     @GetMapping("/board/writeForm")
     public String writeForm(){
