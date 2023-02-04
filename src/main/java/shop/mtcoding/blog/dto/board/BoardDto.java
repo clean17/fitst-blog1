@@ -1,4 +1,4 @@
-package shop.mtcoding.blog.dto;
+package shop.mtcoding.blog.dto.board;
 
 import java.sql.Timestamp;
 

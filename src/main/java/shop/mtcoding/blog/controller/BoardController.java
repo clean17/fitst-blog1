@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import shop.mtcoding.blog.dto.BoardDto;
+import shop.mtcoding.blog.dto.board.BoardDto;
 import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
-import shop.mtcoding.blog.util.Script;
 
 @Controller
 public class BoardController {

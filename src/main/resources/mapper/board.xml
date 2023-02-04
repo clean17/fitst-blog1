@@ -8,7 +8,7 @@
         select * from board_tb 
     </select>
 
-    <select id="findById" resultType="shop.mtcoding.blog.dto.BoardDto">
+    <select id="findById" resultType="shop.mtcoding.blog.dto.board.BoardDto">
         select id, title, body,
         ( select username from user_tb where id = b.user_id ) as username,
         created_at

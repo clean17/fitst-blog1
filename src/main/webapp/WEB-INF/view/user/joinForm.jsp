@@ -6,7 +6,7 @@
             <form action="/join" method="post" onsubmit="return valid()">
                 <div class="d-flex form-group mb-2">
                     <input type="text" name="username" class="form-control" placeholder="Enter username" id="username">
-                    <button type="button" class="badge bg-secondary ms-2" id="usernameCheck" onclick="sameCheck">중복확인</button>
+                    <button type="button" class="badge bg-secondary ms-2" id="usernameCheck">중복확인</button>
                 </div>
 
                 <div class="form-group mb-2">
@@ -40,13 +40,42 @@
                 return false;
             }            
         }
+        $('#usernameCheck').click(()=>{
+            let username = { username: $('#username').val() }
+            console.log(username);
+
+            $.ajax({
+                type: "post",
+                url: "/user/usernameCheck",
+                data: JSON.stringify(username),
+                headers:{
+                    "content-type":"application/json; charset=utf-8"
+                },
+                dataType:"json"
+            }).done((res) => {
+                console.log(username);
+                if( res.code !== 1) {
+                    alert(res.msg);
+                }
+                if( res.data === true){
+                    alert(res.msg);
+                    loginSuccess = true;
+                }else{
+                    alert(res.msg);
+                    loginSuccess = false;
+                }            
+            }).fail((err) => {
+                alert('실패');
+            });
+        });
+
         $('#join-btn').click(()=>{
             let logindata = {
                 username: $('#username').val(),
                 password: $('#password').val(),
                 email: $('#email').val()
             }
-            console.log(JSON.stringify(logindata));
+            // console.log(JSON.stringify(logindata));
             $.ajax({
                 type: "post",
                 url: "/join",

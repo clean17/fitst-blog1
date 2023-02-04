@@ -2,6 +2,7 @@ package shop.mtcoding.blog.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,9 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
-
 import shop.mtcoding.blog.dto.user.UserReq.JoinReqDto;
+import shop.mtcoding.blog.dto.user.UserReq.UsernameCheckDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
@@ -39,21 +39,53 @@ public class UserController {
     private HttpSession session;
 
     @Autowired
-    private UserService service;
+    private UserService userService;
+
+    @PostMapping("/user/usernameCheck")
+    // public @ResponseBody ResponseDto<?> usernameCheck(@RequestBody UsernameCheckDto usernameDto){
+    public @ResponseBody ResponseDto<?> usernameCheck(@RequestBody Map<String, Object> param){
+        // String username = usernameDto.getUsername();
+        String username = param.get("username").toString();
+        // System.out.println("파람"+username);
+        if( username == null || username.isEmpty()){  
+            return new ResponseDto<>(-1,"username을 입력해주세요",null);
+        }
+        List<User> userList = userRepository.findAll();
+        long result = userList.stream()
+                .map(e->e.getUsername())
+                .filter(e->e.equalsIgnoreCase(username))
+                .count();
+        if ( result > 0 ){ 
+            return new ResponseDto<>(1,"동일한 username : " + username + "이 존재", false);
+        }else{
+            return new ResponseDto<>(1,"해당 username : " + username + " 사용 가능", true);
+        }
+    }
+
+
 
     // 폼을 한번에 받을거야 .. 파라미터에 계속해서 추가할 수 없으니까 Dto에 받음
     // 메소드를 한번 만지면 완벽하게 만들어.. 유효성도 넣어야지.. 서비스로 넘어가지 말래
     // 이렇게 예외를 다 잡고 서비스로 넘어가면 익셉션은 컨트롤러에서 발생하지 않은게 보장이 된다
     // 이렇게 익셉션 핸들러를 만들어 놓으면 디버깅할때 좋다
     @PostMapping("/join")
-    public String join(JoinReqDto joinReqDto){
-        System.out.println(joinReqDto.getUsername());
-        System.out.println(joinReqDto.getPassword());
-        System.out.println(joinReqDto.getEmail());
-        int result = service.회원가입(joinReqDto);
-        if(result !=1 ) throw new CustomException("회원가입실패");
+    @ResponseBody
+    public String join(JoinReqDto joinReqDto){    
+        if (joinReqDto.getUsername() == null || joinReqDto.getUsername().isEmpty()) {
+            throw new CustomException("username을 작성해주세요");
+        }
+        if (joinReqDto.getPassword() == null || joinReqDto.getPassword().isEmpty()) {
+            throw new CustomException("password를 작성해주세요");
+        }
+        if (joinReqDto.getEmail() == null || joinReqDto.getEmail().isEmpty()) {
+            throw new CustomException("email을 작성해주세요");
+        }
 
-        return "redirect:/loginForm";
+        int result = userService.회원가입(joinReqDto); // 우선 로직없이 리턴
+        if (result != 1) {
+            throw new CustomException("회원가입실패");
+        }
+        return "redirect:/loginForm";      
     }
 
     @GetMapping("/")
@@ -72,8 +104,8 @@ public class UserController {
 
     @GetMapping("/loginForm")
     public String loginForm(){
-        throw new CustomException("로그인폼 못들어감");
-        // return "user/loginForm";
+        // throw new CustomException("로그인폼 못들어감");
+        return "user/loginForm";
     }
     
     // @GetMapping("/loginForm")
