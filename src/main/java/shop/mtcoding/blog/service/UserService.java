@@ -1,12 +1,11 @@
 package shop.mtcoding.blog.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog.dto.user.UserReq.JoinReqDto;
+import shop.mtcoding.blog.dto.user.UserReq.UpdateReqDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
@@ -40,4 +39,23 @@ public class UserService {
         int result = userRepository.insertUser(joinReqDto.getUsername(), joinReqDto.getPassword(), joinReqDto.getEmail());
         return result;
     };
+
+    @Transactional
+    public int 회원수정(UpdateReqDto updateReqDto, int principalId){
+        if( updateReqDto.getId() != principalId){
+            throw new CustomException("본인 정보만 수정 가능합니다.");
+        }
+        if (updateReqDto.getPassword() == null || updateReqDto.getPassword().isEmpty()) {
+            throw new CustomException("password를 작성해주세요");
+        }
+        if (updateReqDto.getEmail() == null || updateReqDto.getEmail().isEmpty()) {
+            throw new CustomException("email을 작성해주세요");
+        }
+        return userRepository.updateUser(
+            updateReqDto.getPassword(), 
+            updateReqDto.getEmail(), 
+            principalId);
+    }
+    
+
 }

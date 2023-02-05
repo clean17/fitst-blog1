@@ -48,20 +48,23 @@
     </div>
 
     <script>
-        function deleteBoard(){
+        function deleteBoard() {
             $.ajax({
                 type: "delete",
                 url: `/board/${board.id}/delete`,
-                dataType:"json"                
             }).done((res) => {
-                if ( res.code === -1) {
+                if (res.code === 0) {
                     alert(res.msg);
-                    location.href='/errorpage';
-                }                    
-                if ( res.data == true){
+                    location.href = '/loginForm';
+                }
+                if (res.code === -1) {
                     alert(res.msg);
-                    location.href='/';
-                }else{
+                    location.href = '/';
+                }
+                if (res.data === true) {
+                    alert(res.msg);
+                    location.href = '/';
+                } else {
                     alert(res.msg);
                 }
             }).fail((err) => {

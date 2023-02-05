@@ -8,12 +8,15 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import shop.mtcoding.blog.dto.board.BoardReq.BoardReqDto;
 import shop.mtcoding.blog.dto.user.UserReq.JoinReqDto;
+import shop.mtcoding.blog.dto.user.UserReq.UpdateReqDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
@@ -73,10 +76,7 @@ public class UserController {
         if (result != 1) {
             throw new CustomException("회원가입실패");
         }
-            // return new ResponseDto<>(1, "DB 에러",false);
-            // return new ResponseDto<>(1, "회원 가입 성공",true);
         return "redirect:/loginForm";      
-        //  return Script.href("회원가입 성공", "/loginForm");
     }
 
     @PostMapping("/login")
@@ -125,25 +125,36 @@ public class UserController {
     //     }
     // }
 
-    @PutMapping("/update")
-    @ResponseBody
-    public ResponseDto<?> update(@RequestBody Map<String, Object> param){
-        String password = param.get("password").toString();
-        String email = param.get("email").toString();
+    // @PostMapping("/update")
+    // @ResponseBody
+    // public ResponseDto<?> update(@RequestBody Map<String, Object> param){
+    //     String password = (String)param.get("password");
+    //     String email = (String)param.get("email");
+    //     int id = (int)param.get("email");
 
+    //     User principal = (User)session.getAttribute("principal");
+    //     if( principal == null ){
+    //         return new ResponseDto<>(1, "로그인 풀림",false);
+    //     }
+        
+    //     int result = userService.회원수정(password, email, id, principal.getId());
+    //     if( result != 1 ) {
+    //         return new ResponseDto<>(1, "DB 에러",false);
+    //     }
+    //     return new ResponseDto<>(1, "회원 수정 완료",true);
+    // }
+
+    @PostMapping("/user/update")
+    @ResponseBody
+    public String update(UpdateReqDto updateReqDto){
         User principal = (User)session.getAttribute("principal");
         if( principal == null ){
-            return new ResponseDto<>(1, "로그인 풀림",false);
+            throw new CustomException("로그인이 필요합니다.");
         }
-
-        if( password == null || password.isEmpty() || email == null || email.isEmpty() ){
-            return new ResponseDto<>(1, "필수 입력창을 확인하세요",null);
-        }
-        int result = userRepository.updateUser( password, email, principal.getId());
+        int result = userService.회원수정(updateReqDto, principal.getId());
         if( result != 1 ) {
-            return new ResponseDto<>(1, "DB 에러",false);
-        }else{
-            return new ResponseDto<>(1, "수정 완료",true);
+            throw new CustomException("수정 실패");
         }
+        return Script.href("수정 완료", "/");
     }
 }
