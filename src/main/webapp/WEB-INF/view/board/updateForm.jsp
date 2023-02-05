@@ -2,17 +2,18 @@
 <%@ include file="../layout/header.jsp" %>
 
     <div class="container my-3">
-        <form>
+        <form action="/borad/${board.id}/update" method="post">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Enter title" name="title" id="title" value="${board.title}">
+                <input type="text" class="form-control" placeholder="Enter title" name="title" value="${board.title}">
             </div>
 
             <div class="form-group">
-                <textarea class="form-control summernote" rows="5" id="content" name="content">${board.body}</textarea>
+                <textarea class="form-control summernote" rows="5" name="content">${board.body}</textarea>
             </div>
+                <input type="hidden" name="id" value="${board.id}">
+                <input type="hidden" name="userId" value="${principal.id}">
+        <button type="submit" class="btn btn-primary">글수정완료</button>
         </form>
-        <button type="button" class="btn btn-primary" onclick="update()">글수정완료</button>
-
     </div>
 
     <script>
@@ -20,33 +21,35 @@
             tabsize: 2,
             height: 400
         });
-        function update(){
-            let post = {
-                title: $('#title').val(),
-                content: $('#content').val()
-            }
-            console.log(JSON.stringify(post)); 
-            $.ajax({
-                type: "put",
-                url: "/borad/${board.id}/update",
-                data: JSON.stringify(post),
-                headers:{
-                    "content-type":"application/json; charset=utf-8"
-                },
-                dataType:"json"
-            }).done((res) => {
-                if(res.code !== 1 )
-                    location.href="/";
-                if(res.data === true){
-                    alert(res.msg);
-                    window.location.href='/board/${board.id}';
-                }else{
-                    alert(res.msg);
-                }
-            }).fail((err) => {
+        // function update(){
+        //     let post = {
+        //         title: $('#title').val(),
+        //         content: $('#content').val()
+        //     }
+        //     $.ajax({
+        //         type: "put",
+        //         url: "/borad/${board.id}/update",
+        //         data: JSON.stringify(post),
+        //         headers:{
+        //             "content-type":"application/json; charset=utf-8"
+        //         },
+        //         dataType:"json"
+        //     }).done((res) => {
+        //         if(res.code === -1 ){
+        //             alert(res.msg);
+        //             location.href='/loginForm';
+        //         }
+        //         if(res.data === true){
+        //             alert(res.msg);
+        //             location.href='/board/${board.id}';
+        //         }else{  
+        //             alert(res.msg);
+        //             location.href='/';
+        //         }
+        //     }).fail((err) => {
             
-            });
-        }
+        //     });
+        // }
     </script>
 
 <%@ include file="../layout/footer.jsp" %>

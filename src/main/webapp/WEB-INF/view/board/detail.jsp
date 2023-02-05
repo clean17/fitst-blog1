@@ -14,7 +14,6 @@
             글 번호 : <span id="id">${board.id}<i> </i></span> 작성자 : <span class="me-3"><i>${board.username} </i></span> 
             <i id="heart" class="fa-regular fa-heart my-xl my-cursor"></i>
         </div>
-
         <div>
             <h3>${board.title}</h3>
         </div>
@@ -23,7 +22,6 @@
             <div>${board.body}</div>
         </div>
         <hr />
-
         <div class="card">
             <form>
                 <div class="card-body">
@@ -50,24 +48,27 @@
     </div>
 
     <script>
-        function deleteBoard(){
-        
+        function deleteBoard() {
             $.ajax({
                 type: "delete",
                 url: `/board/${board.id}/delete`,
-                dataType:"json"                
             }).done((res) => {
-                if ( res.code !== 1) 
+                if (res.code === 0) {
                     alert(res.msg);
-                    location.href='/errorpage';
-                if ( res.data == true){
+                    location.href = '/loginForm';
+                }
+                if (res.code === -1) {
                     alert(res.msg);
-                    location.href='/';
-                }else{
+                    location.href = '/';
+                }
+                if (res.data === true) {
+                    alert(res.msg);
+                    location.href = '/';
+                } else {
                     alert(res.msg);
                 }
             }).fail((err) => {
-            
+                alert('실패')
             });
         }
     </script>
