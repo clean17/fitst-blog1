@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class Reply {
     private int id;
-    private String body;
+    private String content;
     private int boardId;
     private int userId;
     private Timestamp createdAt;

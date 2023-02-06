@@ -17,7 +17,6 @@ import shop.mtcoding.blog.dto.user.UserReq.UpdateReqDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
-import shop.mtcoding.blog.model.UserRepository;
 import shop.mtcoding.blog.service.UserService;
 import shop.mtcoding.blog.util.Script;
 
@@ -67,11 +66,8 @@ public class UserController {
         if (joinReqDto.getEmail() == null || joinReqDto.getEmail().isEmpty()) {
             throw new CustomException("email을 작성해주세요");
         }
-
-        int result = userService.회원가입(joinReqDto);
-        if (result != 1) {
-            throw new CustomException("회원가입실패");
-        }
+        userService.회원가입(joinReqDto);  // 서비스가 굳이 잘못된거를 컨트롤러에게 돌려줄 필요가 없다. 서비스가 알아서 처리하자!!!!!!!!!!!!!!!!!
+        
         // 프로그램을 만들때는 모든 기능이 다 작동하는지 테스트를 하고 다음단계로 넘어가야 한다. !!!!!!!!!!!!!!!!!!!!!!!!!
         // 나중에 디버깅하기가 힘들어진다. 제대로 검증을 하고 넘어가라 !!!!!!!!!!!!!!!!
         return "redirect:/loginForm";      

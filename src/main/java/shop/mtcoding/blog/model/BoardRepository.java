@@ -11,14 +11,14 @@ import shop.mtcoding.blog.dto.board.BoardDto;
 public interface BoardRepository {
     public int insertBoard(
         @Param("title") String title,
-        @Param("body") String body,
+        @Param("content") String content,
         @Param("userId") int userId
     );
     public int deleteBoard(int id); 
 
     public int updateBoard(
         @Param("title") String title,
-        @Param("body") String body,
+        @Param("content") String content,
         @Param("id") int id
     );
     public List<Board> findAll();

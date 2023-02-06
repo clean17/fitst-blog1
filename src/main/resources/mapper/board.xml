@@ -9,7 +9,7 @@
     </select>
 
     <select id="findById" resultType="shop.mtcoding.blog.dto.board.BoardDto">
-        select id, title, body,
+        select id, title, content,
         ( select username from user_tb where id = b.user_id ) as username,
         created_at
         from board_tb b
@@ -17,8 +17,8 @@
     </select>
 
     <insert id="insertBoard">
-        insert into board_tb ( title, body, user_id, created_at) 
-            values ( #{title}, #{body}, #{userId}, now())
+        insert into board_tb ( title, content, user_id, created_at) 
+            values ( #{title}, #{content}, #{userId}, now())
     </insert>
 
     <delete id="deleteBoard">
@@ -26,6 +26,6 @@
     </delete>
 
     <update id="updateBoard">
-        update board_tb set title=#{title}, body=#{body} where id=#{id}
+        update board_tb set title=#{title}, content=#{content} where id=#{id}
     </update>
 </mapper>

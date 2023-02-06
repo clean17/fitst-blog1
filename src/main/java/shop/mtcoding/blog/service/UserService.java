@@ -32,13 +32,15 @@ public class UserService {
     }
     
     @Transactional
-    public int 회원가입(JoinReqDto joinReqDto) {
+    public void 회원가입(JoinReqDto joinReqDto) {  // void 로 만들어 여기서 -1 을 받아서 회원가입실패 진단을 내려 .. 컨트롤러의 책임을 가볍게 만들어 
         User sameUser = userRepository.findByUsername(joinReqDto.getUsername());
         if (sameUser != null) {
             throw new CustomException("동일한 username이 존재합니다");
         }
         int result = userRepository.insertUser(joinReqDto.getUsername(), joinReqDto.getPassword(), joinReqDto.getEmail());
-        return result;
+        if (result != 1) {
+            throw new CustomException("회원가입실패");
+        }        
     };
 
     @Transactional
@@ -64,27 +66,29 @@ public class UserService {
     // 개발자들을 보통 조회에도 트랜잭션을 걸어준다. 어차피 조회는 순식간에 끝나고 
     // 그 찰나에 변경에 의한 에러를 도출하기 싫다는거야
 
-    // @Transactional(readOnly = true)
-    // public User 로그인(LoginReqDto loginReqDto) {
-    //     User principal = userRepository.findByUsernameAndPassword(
-    //             loginReqDto.getUsername(),
-    //             loginReqDto.getPassword());
-    //     if (principal == null) {
-    //         throw new CustomException("유저네임 혹은 패스워드가 잘못 입력되었습니다.");
-    //     }
-    //     return principal;
-    // }
-
-    public User 로그인(LoginReqDto loginReqDto){
-        
-        User user = new User();
-        user.setId(1);
-        user.setUsername("ssar");
-        user.setPassword("1234");
-        user.setEmail("ssar@nate.com");
-        // return null;
-        return user;
+    @Transactional(readOnly = true)
+    public User 로그인(LoginReqDto loginReqDto) {
+        User principal = userRepository.findByUsernameAndPassword(
+                loginReqDto.getUsername(),
+                loginReqDto.getPassword());
+        if (principal == null) {
+            throw new CustomException("유저네임 혹은 패스워드가 잘못 입력되었습니다.");
+        }
+        return principal;
     }
+
+
+    // junit 테스트에서 사용
+    // public User 로그인(LoginReqDto loginReqDto){
+        
+    //     User user = new User();
+    //     user.setId(1);
+    //     user.setUsername("ssar");
+    //     user.setPassword("1234");
+    //     user.setEmail("ssar@nate.com");
+    //     // return null;
+    //     return user;
+    // }
     
 
 }

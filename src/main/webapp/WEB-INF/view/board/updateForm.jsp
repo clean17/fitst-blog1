@@ -8,7 +8,7 @@
             </div>
 
             <div class="form-group">
-                <textarea class="form-control summernote" rows="5" name="content">${board.body}</textarea>
+                <textarea class="form-control summernote" rows="5" name="content">${board.content}</textarea>
             </div>
                 <input type="hidden" name="id" value="${board.id}">
                 <input type="hidden" name="userId" value="${principal.id}">

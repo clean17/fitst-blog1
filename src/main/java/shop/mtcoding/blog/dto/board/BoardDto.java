@@ -10,7 +10,7 @@ import lombok.Setter;
 public class BoardDto {
     private int id;
     private String title;
-    private String body;
+    private String content;
     private String username;
     private Timestamp createdAt;
 }

@@ -5,7 +5,7 @@
 
 <mapper namespace="shop.mtcoding.blog.model.ReplyRepository">
     <select id="findAll" resultType="shop.mtcoding.blog.dto.reply.ReplyDto">
-        select id, body, board_id,
+        select id,content, board_id,
           ( select username from user_tb where id = r.user_id ),
           created_at from reply_tb r
     </select>

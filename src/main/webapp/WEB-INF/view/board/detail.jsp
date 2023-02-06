@@ -19,7 +19,7 @@
         </div>
         <hr />
         <div>
-            <div>${board.body}</div>
+            <div>${board.content}</div>
         </div>
         <hr />
         <div class="card">
@@ -38,7 +38,7 @@
             <ul id="reply-box" class="list-group">
             <c:forEach items="${replyList}" var="reply">
                 <li id="reply-1" class="list-group-item d-flex justify-content-between">
-                    <div>${reply.body}</div>
+                    <div>${reply.content}</div>
                     <div class="d-flex">
                         <div class="font-italic">작성자 : {reply.} &nbsp;</div>
                         <button onClick="replyDelete()" class="badge bg-secondary">삭제</button>
