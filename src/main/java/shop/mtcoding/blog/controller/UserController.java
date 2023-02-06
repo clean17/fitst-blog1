@@ -1,6 +1,5 @@
 package shop.mtcoding.blog.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -8,14 +7,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import shop.mtcoding.blog.dto.board.BoardReq.BoardReqDto;
 import shop.mtcoding.blog.dto.user.UserReq.JoinReqDto;
+import shop.mtcoding.blog.dto.user.UserReq.LoginReqDto;
 import shop.mtcoding.blog.dto.user.UserReq.UpdateReqDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.ResponseDto;
@@ -26,9 +23,8 @@ import shop.mtcoding.blog.util.Script;
 
 @Controller
 public class UserController {
-
-    @Autowired
-    private UserRepository userRepository;
+    // @Autowired
+    // private UserRepository userRepository;
 
     @Autowired
     private HttpSession session;
@@ -76,54 +72,28 @@ public class UserController {
         if (result != 1) {
             throw new CustomException("회원가입실패");
         }
+        // 프로그램을 만들때는 모든 기능이 다 작동하는지 테스트를 하고 다음단계로 넘어가야 한다. !!!!!!!!!!!!!!!!!!!!!!!!!
+        // 나중에 디버깅하기가 힘들어진다. 제대로 검증을 하고 넘어가라 !!!!!!!!!!!!!!!!
         return "redirect:/loginForm";      
     }
 
     @PostMapping("/login")
-    @ResponseBody
-    public ResponseDto<?> login(@RequestBody Map<String, Object> param){     
-        String username = param.get("username").toString();
-        String password = param.get("password").toString();
-
-        if ( username == null || username.isEmpty() ){
-            return new ResponseDto<>(1, "아이디가 비었습니다",null);
+    public String login(LoginReqDto loginReqDto){
+        if (loginReqDto.getUsername() == null || loginReqDto.getUsername().isEmpty()) {
+            // 원래는 한글막고 길이제한걸고.. 정규표현식을 사용해야함 
+            throw new CustomException("username을 작성해주세요");
         }
-        if ( password == null || password.isEmpty()){
-            return new ResponseDto<>(1, "비밀번호가 비었습니다",null);
+        if (loginReqDto.getPassword() == null || loginReqDto.getPassword().isEmpty()) {
+            throw new CustomException("password를 작성해주세요");
         }
-        User principal = userRepository.findByUsernameAndPassword(username, password);
-        if ( principal == null ) {
-            return new ResponseDto<>(1, "아이디 또는 비밀번호가 다릅니다", false);
-        }else{
-            // Cookie cookie = new Cookie("remember",username);
-            session.setAttribute("principal", principal);
-            return new ResponseDto<>(1, "로그인 성공", true);
-        }
+        User principal = userService.로그인(loginReqDto);
+        
+        session.setAttribute("principal", principal);
+        System.out.println(principal.getUsername()); // @Test 가 현 메소드를 실제상황처럼 실행시켜준다.
+        return "redirect:/";
     }
  
-    // @PostMapping("/join")
-    // @ResponseBody
-    // public ResponseDto<?> join(@RequestBody Map<String, Object> param){
-    //     String username = param.get("username").toString();
-    //     String password = param.get("password").toString();
-    //     String email = param.get("email").toString();
     
-    //     if( username == null || username.isEmpty() ){
-    //         return new ResponseDto<>(1, "아이디를 입력하세요",null);
-    //     }
-    //     if( password == null || password.isEmpty() ){
-    //         return new ResponseDto<>(1, "패스워드를 입력하세요",null);
-    //     }
-    //     if( email == null || email.isEmpty() ){
-    //         return new ResponseDto<>(1, "이메일을 입력하세요",null);
-    //     }
-    //     int result = userRepository.insertUser( username, password, email);
-    //     if( result != 1 ) {
-    //         return new ResponseDto<>(1, "DB 에러",false);
-    //     }else{
-    //         return new ResponseDto<>(1, "회원 가입 성공",true);
-    //     }
-    // }
 
     // @PostMapping("/update")
     // @ResponseBody

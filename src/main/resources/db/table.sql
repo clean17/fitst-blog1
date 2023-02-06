@@ -17,6 +17,7 @@ create table board_tb (
 create table reply_tb (
     id int auto_increment primary key,
     body varchar,
+    board_id int not null,
     user_id int not null,
     created_at timestamp not null
 );

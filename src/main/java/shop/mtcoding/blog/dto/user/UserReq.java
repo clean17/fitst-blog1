@@ -1,14 +1,9 @@
 package shop.mtcoding.blog.dto.user;
 
-import java.util.Map;
-
-import org.springframework.web.bind.annotation.RequestBody;
-
 import lombok.Getter;
 import lombok.Setter;
 
-public class UserReq {
-    
+public class UserReq {    
     @Getter
     @Setter
     public static class JoinReqDto{
@@ -16,7 +11,6 @@ public class UserReq {
         private String password;
         private String email;
     }
-
     @Getter
     @Setter
     public static class UpdateReqDto{
@@ -24,10 +18,10 @@ public class UserReq {
         private String password;
         private String email;
     }
-    // @Getter
-    // @Setter
-    // public static class UsernameCheckDto{
-    //     private Map<String, Object> param;
-    //     private String username = param.get("username").toString();
-    // }
+    @Getter
+    @Setter
+    public static class LoginReqDto{
+        private String username;
+        private String password;
+    }
 }

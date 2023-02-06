@@ -3,7 +3,7 @@
 
     <div class="container my-3">
         <div class="container">
-            <form action="/login" method="post" onsubmit="return valid()">
+            <form action="/login" method="post" >
                 <div class="form-group mb-2">
                     <input type="text" name="username" class="form-control" placeholder="Enter username" id="username" required>
                 </div>
@@ -13,49 +13,49 @@
                         id="password" required>
                 </div>
 
-                <button type="button" id="login-btn" class="btn btn-primary">로그인</button>
+                <button type="submit" id="login-btn" class="btn btn-primary">로그인</button>
             </form>
 
         </div>
     </div>
     <script>
-        let loginSuccess = false;
+        // let loginSuccess = false;
 
-        function valid(){
-            if ( loginSuccess ){
-                return true;
-            }else{
-                return false;
-            }
+        // function valid(){
+        //     if ( loginSuccess ){
+        //         return true;
+        //     }else{
+        //         return false;
+        //     }
             
-        }
-        $('#login-btn').click(()=>{
-            let logindata = {
-                username: $('#username').val(),
-                password: $('#password').val()
-            }
-            console.log(JSON.stringify(logindata));
-            $.ajax({
-                type: "post",
-                url: "/login",
-                data: JSON.stringify(logindata),
-                headers:{
-                    "content-type":"application/json; charset=utf-8"
-                },
-                dataType:"json"
-            }).done((res) => {
-                if ( res.data != true ){
-                    alert(res.msg);
-                    loginSuccess = false;
-                }else{
-                    alert(res.msg);
-                    loginSuccess = true;
-                    location.href="/";
-                }           
-            }).fail((err) => {
+        // }
+        // $('#login-btn').click(()=>{
+        //     let logindata = {
+        //         username: $('#username').val(),
+        //         password: $('#password').val()
+        //     }
+        //     console.log(JSON.stringify(logindata));
+        //     $.ajax({
+        //         type: "post",
+        //         url: "/login",
+        //         data: JSON.stringify(logindata),
+        //         headers:{
+        //             "content-type":"application/json; charset=utf-8"
+        //         },
+        //         dataType:"json"
+        //     }).done((res) => {
+        //         if ( res.data != true ){
+        //             alert(res.msg);
+        //             loginSuccess = false;
+        //         }else{
+        //             alert(res.msg);
+        //             loginSuccess = true;
+        //             location.href="/";
+        //         }           
+        //     }).fail((err) => {
                 
-            });         
-        });
+        //     });         
+        // });
     </script>
 
 <%@ include file="../layout/footer.jsp" %>

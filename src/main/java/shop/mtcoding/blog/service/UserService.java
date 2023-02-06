@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog.dto.user.UserReq.JoinReqDto;
+import shop.mtcoding.blog.dto.user.UserReq.LoginReqDto;
 import shop.mtcoding.blog.dto.user.UserReq.UpdateReqDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.ResponseDto;
@@ -55,6 +56,34 @@ public class UserService {
             updateReqDto.getPassword(), 
             updateReqDto.getEmail(), 
             principalId);
+    }
+
+    // 로그인은 조회만 하지만 조회중에 다른메소드에서 변경을 하면 현 조회메소드가 진행중에
+    // 데이터가 바뀌면 메소드가 에러가 난다. 그래서 처음메소드에 진입했을때부터 나갈때까지 
+    // 데이터를 보존하기 위해서 ( 아이솔레이션 ) 조회할때도 트랜잭션을 걸어준다. 
+    // 개발자들을 보통 조회에도 트랜잭션을 걸어준다. 어차피 조회는 순식간에 끝나고 
+    // 그 찰나에 변경에 의한 에러를 도출하기 싫다는거야
+
+    // @Transactional(readOnly = true)
+    // public User 로그인(LoginReqDto loginReqDto) {
+    //     User principal = userRepository.findByUsernameAndPassword(
+    //             loginReqDto.getUsername(),
+    //             loginReqDto.getPassword());
+    //     if (principal == null) {
+    //         throw new CustomException("유저네임 혹은 패스워드가 잘못 입력되었습니다.");
+    //     }
+    //     return principal;
+    // }
+
+    public User 로그인(LoginReqDto loginReqDto){
+        
+        User user = new User();
+        user.setId(1);
+        user.setUsername("ssar");
+        user.setPassword("1234");
+        user.setEmail("ssar@nate.com");
+        // return null;
+        return user;
     }
     
 

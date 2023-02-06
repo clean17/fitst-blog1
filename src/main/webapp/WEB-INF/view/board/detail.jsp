@@ -36,13 +36,16 @@
         <div class="card">
             <div class="card-header">댓글 리스트</div>
             <ul id="reply-box" class="list-group">
+            <c:forEach items="${replyList}" var="reply">
                 <li id="reply-1" class="list-group-item d-flex justify-content-between">
-                    <div>댓글내용입니다</div>
+                    <div>${reply.body}</div>
                     <div class="d-flex">
-                        <div class="font-italic">작성자 : cos &nbsp;</div>
+                        <div class="font-italic">작성자 : {reply.} &nbsp;</div>
                         <button onClick="replyDelete()" class="badge bg-secondary">삭제</button>
                     </div>
                 </li>
+            </c:forEach>
+                
             </ul>
         </div>
     </div>
@@ -71,5 +74,26 @@
                 alert('실패')
             });
         }
+        $('#btn-reply-save').click(()=>{
+            let reply = { reply: $('#reply-content').val(); }
+            $.ajax({
+                type: "put",
+                url: "/reply/insert",
+                data: JSON.stringify(reply),
+                headers:{
+                    "content-type":"application/json; charset=utf-8"
+                },
+                dataType:"json"
+            }).done((res) => {
+                if( res.code === -1 ){
+                
+                }
+                if( res.data === true ){
+                    
+                }
+            }).fail((err) => {
+            
+            });
+        });
     </script>
 <%@ include file="../layout/footer.jsp" %>

@@ -1,7 +1,6 @@
 package shop.mtcoding.blog.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,15 +11,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blog.dto.board.BoardDto;
 import shop.mtcoding.blog.dto.board.BoardReq.BoardReqDto;
+import shop.mtcoding.blog.dto.reply.ReplyDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
+import shop.mtcoding.blog.model.ReplyRepository;
 import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.model.UserRepository;
@@ -43,6 +42,9 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @GetMapping("/")
     public String main(Model model){
         // User principal = userRepository.findByUsernameAndPassword("ssar", "1234");
@@ -61,7 +63,9 @@ public class BoardController {
         if ( board == null ){
             return "redirect:/errorpage";
         }
+        List<ReplyDto> replyList = replyRepository.findAll();
         model.addAttribute("board", board);
+        model.addAttribute("replyList", replyList);
         return "board/detail";
     }
     @GetMapping("/board/{id}/updateForm")
@@ -160,4 +164,6 @@ public class BoardController {
         }
         return new ResponseDto<>(1, "삭제 완료",true);            
     }
+
+    
 }

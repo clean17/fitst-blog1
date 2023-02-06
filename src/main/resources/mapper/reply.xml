@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.blog.model.ReplyRepository">
+    <select id="findAll" resultType="shop.mtcoding.blog.dto.reply.ReplyDto">
+        select id, body, board_id,
+          ( select username from user_tb where id = r.user_id ),
+          created_at from reply_tb r
+    </select>
+</mapper>
