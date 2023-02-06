@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import shop.mtcoding.blog.model.ResponseDto;
+import shop.mtcoding.blog.dto.ResponseDto;
 
 @Controller
 public class ReplyController {

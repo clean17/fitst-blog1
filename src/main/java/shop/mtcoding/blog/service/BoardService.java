@@ -5,8 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import shop.mtcoding.blog.dto.board.BoardDto;
 import shop.mtcoding.blog.dto.board.BoardReq.BoardSaveReqDto;
+import shop.mtcoding.blog.dto.board.BoardResp;
+import shop.mtcoding.blog.dto.board.BoardResp.BoardDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.BoardRepository;
 
@@ -39,7 +40,7 @@ public class BoardService {
 
     @Transactional
     public int 글삭제하기(int id, String username) {
-        BoardDto board = boardRepository.findById(id);
+        BoardResp.BoardDto board = boardRepository.findById(id);
         if (board == null) { return -1; }      
         if (!board.getUsername().equalsIgnoreCase(username)) { return -1;}
         return boardRepository.deleteBoard(id);

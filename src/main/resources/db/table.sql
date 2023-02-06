@@ -9,14 +9,14 @@ create table user_tb (
 create table board_tb (
     id int auto_increment primary key,
     title varchar not null,
-   content longtext not null,
+    content longtext not null,
     user_id int not null,
     created_at timestamp not null
 );
 
 create table reply_tb (
     id int auto_increment primary key,
-   content varchar,
+    content varchar,
     board_id int not null,
     user_id int not null,
     created_at timestamp not null

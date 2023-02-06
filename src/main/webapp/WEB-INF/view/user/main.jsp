@@ -7,6 +7,7 @@
             <div class="card">
                 <img class="card-img-top" src="images/profile.jpeg" alt="Card image">
                 <div class="card-body">
+                    <div>작성자 : ${board.username} </div>
                     <h4 class="card-title my-text-ellipsis">${board.title}</h4>
                     <a href="/board/${board.id}" class="btn btn-primary">상세보기</a>
                 </div>

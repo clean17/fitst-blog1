@@ -5,7 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import shop.mtcoding.blog.dto.board.BoardDto;
+import shop.mtcoding.blog.dto.board.BoardResp;
+import shop.mtcoding.blog.dto.board.BoardResp.BoardDto;
 
 @Mapper
 public interface BoardRepository {
@@ -23,5 +24,7 @@ public interface BoardRepository {
     );
     public List<Board> findAll();
     public BoardDto findById(int id);
+
+    public List<BoardResp.BoardMainRespDto> findAllWithUser();
 }
 

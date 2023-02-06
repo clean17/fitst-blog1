@@ -1,25 +1,10 @@
-<script>
-    function deleteBoard() {
-        $.ajax({
-            type: "delete",
-            url: `/board/${board.id}/delete`,
-        }).done((res) => {
-            if (res.code === 0) {
-                alert(res.msg);
-                location.href = '/loginForm';
-            }
-            if (res.code === -1) {
-                alert(res.msg);
-                location.href = '/';
-            }
-            if (res.data === true) {
-                alert(res.msg);
-                location.href = '/';
-            } else {
-                alert(res.msg);
-            }
-        }).fail((err) => {
-            alert('실패')
-        });
-    }
-</script>
+<c:forEach items="${boardList}" var="board">
+    <div class="card">
+        <img class="card-img-top" src="images/profile.jpeg" alt="Card image">
+        <div class="card-body">
+            <div>작성자 : ${board.username} </div>
+            <h4 class="card-title my-text-ellipsis">${board.title}</h4>
+            <a href="/board/${board.id}" class="btn btn-primary">상세보기</a>
+        </div>
+    </div>
+</c:forEach>

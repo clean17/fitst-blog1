@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import shop.mtcoding.blog.dto.ResponseDto;
 import shop.mtcoding.blog.dto.user.UserReq.JoinReqDto;
 import shop.mtcoding.blog.dto.user.UserReq.LoginReqDto;
 import shop.mtcoding.blog.dto.user.UserReq.UpdateReqDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
-import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.service.UserService;
 import shop.mtcoding.blog.util.Script;

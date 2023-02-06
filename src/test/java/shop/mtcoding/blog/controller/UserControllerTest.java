@@ -56,11 +56,9 @@ public class UserControllerTest {
     public void join_test() throws Exception {
         // given
         String requestBody = "username=cos&password=1234&email=cos@nate.com"; // 이렇게 넘기면 스프링의 기본 파싱전락에 의해서 key=value 형태로 메소드가 받아 먹음
-
         // when
         ResultActions resultActions = mvc.perform(post("/join").content(requestBody)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
-
         // then
         resultActions.andExpect(status().is3xxRedirection());
     }

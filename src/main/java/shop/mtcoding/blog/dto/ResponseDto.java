@@ -1,4 +1,4 @@
-package shop.mtcoding.blog.model;
+package shop.mtcoding.blog.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

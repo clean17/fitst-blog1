@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import shop.mtcoding.blog.dto.board.BoardDto;
 import shop.mtcoding.blog.dto.board.BoardReq.BoardSaveReqDto;
+import shop.mtcoding.blog.dto.ResponseDto;
+import shop.mtcoding.blog.dto.board.BoardResp;
 import shop.mtcoding.blog.dto.reply.ReplyDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
-import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.ReplyRepository;
-import shop.mtcoding.blog.model.ResponseDto;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.model.UserRepository;
 import shop.mtcoding.blog.service.BoardService;
@@ -48,9 +47,9 @@ public class BoardController {
 
     @GetMapping("/")
     public String main(Model model){
-        User principal = userRepository.findByUsernameAndPassword("ssar", "1234");
-        session.setAttribute("principal", principal);
-        List<Board> boardList = boardRepository.findAll();
+        // User principal = userRepository.findByUsernameAndPassword("ssar", "1234");
+        // session.setAttribute("principal", principal);
+        List<BoardResp.BoardMainRespDto> boardList = boardRepository.findAllWithUser();
         model.addAttribute("boardList", boardList);    
         return "user/main" ;
     }
@@ -60,7 +59,7 @@ public class BoardController {
     }
     @GetMapping("/board/{id}")
     public String detail(@PathVariable int id, Model model){
-        BoardDto board = boardRepository.findById(id);
+        BoardResp.BoardDto board = boardRepository.findById(id);
         if ( board == null ){
             return "redirect:/errorpage";
         }
@@ -71,7 +70,7 @@ public class BoardController {
     }
     @GetMapping("/board/{id}/updateForm")
     public String updateForm(@PathVariable int id, Model model){
-        BoardDto board = boardRepository.findById(id);
+        BoardResp.BoardDto board = boardRepository.findById(id);
         if ( board == null ){
             return "redirect:/errorpage";
         }
@@ -148,7 +147,7 @@ public class BoardController {
         if( principal == null ){
             return new ResponseDto<>( 0, "로그인이 필요한 페이지입니다",null);
         }
-        BoardDto board = boardRepository.findById(id);
+        BoardResp.BoardDto board = boardRepository.findById(id);
         if (board == null) {
             return new ResponseDto<>( -1, "글이 존재하지 않습니다.",null);
         }
