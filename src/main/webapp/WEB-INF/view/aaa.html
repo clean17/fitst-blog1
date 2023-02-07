@@ -1,10 +1,18 @@
-<c:forEach items="${boardList}" var="board">
-    <div class="card">
-        <img class="card-img-top" src="images/profile.jpeg" alt="Card image">
-        <div class="card-body">
-            <div>작성자 : ${board.username} </div>
-            <h4 class="card-title my-text-ellipsis">${board.title}</h4>
-            <a href="/board/${board.id}" class="btn btn-primary">상세보기</a>
-        </div>
-    </div>
-</c:forEach>
+<script>
+    function deleteBoard(id) {  // 스크립트에 el표현식을 사용하지 마라 !!! 나중에 자바스크립트를 파일로 추출할때 안 먹힌다.
+        $.ajax({
+            type: "delete",
+            url: `/board/${id}`,
+            dataType: "json"
+        }).done((res) => { // 2xx 일때
+            console.dir(res);
+            alert(res.msg);
+            // location.href = '/';
+        }).fail((err) => { // 4xx 5xx 일때
+            console.dir(err);
+            alert(err.msg);   //CustomApiException 를 만들었으므로 json 을 읽을수가 있다 스크립트를 응답받을 필요가 없다.
+            // alert('실패') 이렇게 받으면 안된다.
+            // alert(err.responseJSON.msg);
+        });
+    }
+</script>

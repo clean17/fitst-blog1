@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,14 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blog.dto.ResponseDto;
 import shop.mtcoding.blog.dto.board.BoardReq.BoardSaveReqDto;
-import shop.mtcoding.blog.dto.board.BoardResp;
 import shop.mtcoding.blog.dto.board.BoardResp.BoardDetailRespDto;
 import shop.mtcoding.blog.dto.reply.ReplyDto;
+import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.ReplyRepository;
 import shop.mtcoding.blog.model.User;
-import shop.mtcoding.blog.model.UserRepository;
 import shop.mtcoding.blog.service.BoardService;
 import shop.mtcoding.blog.util.Script;
 
@@ -38,18 +38,21 @@ public class BoardController {
     private HttpSession session;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private BoardService boardService;
 
     @Autowired
     private ReplyRepository replyRepository;
 
+    // private void mockSession(){
+    //     User user = new User();
+    //     user.setId(1);
+    //     user.setUsername("ssar");
+    //     session.setAttribute("principal", user);
+    // }
+
     @GetMapping({"/","board"})
     public String main(Model model){
-        // User principal = userRepository.findByUsernameAndPassword("ssar", "1234");
-        // session.setAttribute("principal", principal);
+        // mockSession();
         model.addAttribute("boardList", boardRepository.findAllWithUser());    
         return "user/main" ;
     }
@@ -70,11 +73,11 @@ public class BoardController {
     }
     @GetMapping("/board/{id}/updateForm")
     public String updateForm(@PathVariable int id, Model model){
-        BoardResp.BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
-        if ( board == null ){
+        BoardDetailRespDto dto = boardRepository.findByIdWithUser(id);
+        if ( dto == null ){
             return "redirect:/errorpage";
         }
-        model.addAttribute("board", board);
+        model.addAttribute("dto", dto);
         return "board/updateForm";
     }
 
@@ -140,25 +143,18 @@ public class BoardController {
 
 
 
-    @DeleteMapping("/board/{id}/delete")
-    @ResponseBody
-    public ResponseDto<?> boardDelete(@PathVariable int id){        
+    @DeleteMapping("/board/{id}")
+    @ResponseBody  //  ResponseEntity 내부에 구현되어 있다 안적어도 되지만 공부하려고 적어놓자
+    public ResponseEntity<?> boardDelete(@PathVariable int id){        
+        // 스크립트를 리턴하기 위해 ResponseEntity<?> 를 사용 //
         User principal = (User)session.getAttribute("principal");
         if( principal == null ){
-            return new ResponseDto<>( 0, "로그인이 필요한 페이지입니다",null);
+            throw new CustomApiException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED); 
+            // 리턴 <script>alert('로그인이 필요한 페이지 입니다');history.back();</script>
         }
-        BoardResp.BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
-        if (board == null) {
-            return new ResponseDto<>( -1, "글이 존재하지 않습니다.",null);
-        }
-        if (!board.getUsername().equalsIgnoreCase(principal.getUsername())) {
-            return new ResponseDto<>( -1, "글 삭제 권한이 없습니다.",null);
-        }
-        int result = boardService.글삭제하기(id, principal.getUsername());
-        if ( result != 1 ){
-            return new ResponseDto<>(1, "글 삭제를 실패했습니다.",false);
-        }
-        return new ResponseDto<>(1, "삭제 완료",true);            
+        boardService.글삭제하기(id, principal.getId());
+         // delete 는 json 응답을 받아야 한다.. 자바스크립트가 요청했으니까 ajax 로
+        return new ResponseEntity<>(new ResponseDto<>(1, "삭제 성공", null),HttpStatus.OK);
     }
 
     

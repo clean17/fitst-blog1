@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import shop.mtcoding.blog.dto.board.ResponseDto;
+import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.util.Script;
 
@@ -24,5 +26,10 @@ public class CustomExceptionHandler {
         // 400번대가 뜨면 클라이언트의 잘못.. 
     }
 
+    @ExceptionHandler(CustomApiException.class)  // ajax 요청일때는 fail일때도 json 을 리턴해야하기 때문에 이걸 만든다..
+    // 그러니까 delete 요청의 모든 익셉션 핸들러는 json 을 리턴하니까 이걸로 바꿔야 한다
+    public ResponseEntity<?> CustomApiException(CustomApiException e){                
+        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage() ,null), e.getStatus());
+    }
 }
 

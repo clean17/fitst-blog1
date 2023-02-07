@@ -30,8 +30,8 @@ public class BoardResp {
     public static class BoardDetailRespDto {
         private int id;
         private String title;
-        private String username;
         private String content;
+        private String username;
         private int userId;
     }
 }

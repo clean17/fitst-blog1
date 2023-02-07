@@ -67,7 +67,7 @@
                     joinOk = false;
                 }            
             }).fail((err) => {
-                alert('실패');
+                alert('실패'); 
             });
         });
 

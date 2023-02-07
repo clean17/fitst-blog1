@@ -1,8 +1,10 @@
 package shop.mtcoding.blog.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
@@ -130,9 +132,24 @@ public class BoardControllerTest {
         // resultActions.andExpect(status().isOk());
         Map<String, Object> map = resultActions.andReturn().getModelAndView().getModel();
         BoardDetailRespDto ddd = (BoardDetailRespDto) map.get("dto");
+        System.out.println("테스트 :" + om.writeValueAsString(ddd));
         assertThat(ddd.getId()).isEqualTo(1);
         assertThat(ddd.getUsername()).isEqualTo("ssar");
     }
+
+    @Test
+    public void boardDelete_test() throws Exception{
+        // 지금 할수 있는 검증  인증안됐을대 익셉션 뜨는지 302가 뜨는지
+        int id = 1;
+
+        ResultActions resultActions = mvc.perform(delete("/board/"+id).session(mockSession));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+ responseBody); // 테스트 : {"code":1,"msg":"삭제 성공","data":true}
+        resultActions.andExpect(status().isOk());
+
+        resultActions.andExpect(jsonPath("$.code").value(1)); // json 이 제대로 전송됐는지 테스트
+    }
+
 }
 
 // @AutoConfigureMockMvc

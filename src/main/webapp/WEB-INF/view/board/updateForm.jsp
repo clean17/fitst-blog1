@@ -2,15 +2,15 @@
 <%@ include file="../layout/header.jsp" %>
 
     <div class="container my-3">
-        <form action="/borad/${board.id}/update" method="post">
+        <form action="/borad/${dto.id}/update" method="post">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Enter title" name="title" value="${board.title}">
+                <input type="text" class="form-control" placeholder="Enter title" name="title" value="${dto.title}">
             </div>
 
             <div class="form-group">
-                <textarea class="form-control summernote" rows="5" name="content">${board.content}</textarea>
+                <textarea class="form-control summernote" rows="5" name="content">${dto.content}</textarea>
             </div>
-                <input type="hidden" name="id" value="${board.id}">
+                <input type="hidden" name="id" value="${dto.id}">
                 <input type="hidden" name="userId" value="${principal.id}">
         <button type="submit" class="btn btn-primary">글수정완료</button>
         </form>
