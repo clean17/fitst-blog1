@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blog.dto.ResponseDto;
 import shop.mtcoding.blog.dto.board.BoardReq.BoardSaveReqDto;
+import shop.mtcoding.blog.dto.board.BoardReq.BoardUpdateRqeDto;
 import shop.mtcoding.blog.dto.board.BoardResp.BoardDetailRespDto;
 import shop.mtcoding.blog.dto.reply.ReplyDto;
 import shop.mtcoding.blog.handler.ex.CustomApiException;
@@ -73,9 +74,14 @@ public class BoardController {
     }
     @GetMapping("/board/{id}/updateForm")
     public String updateForm(@PathVariable int id, Model model){
+        User principal = (User)session.getAttribute("principal");
+        if( principal == null ){
+            throw new CustomException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED);
+        }
         BoardDetailRespDto dto = boardRepository.findByIdWithUser(id);
         if ( dto == null ){
-            return "redirect:/errorpage";
+            // return "redirect:/errorpage";
+            throw new CustomException("존재하지 않는 게시글입니다.");
         }
         model.addAttribute("dto", dto);
         return "board/updateForm";
@@ -83,15 +89,19 @@ public class BoardController {
 
     @PostMapping("/borad/{id}/update")
     @ResponseBody
-    public String boardUpdate(@PathVariable int id ,BoardSaveReqDto BoardSaveReqDto, int userId){
+    public String boardUpdate(@PathVariable int id ,BoardUpdateRqeDto boardUpdateRqeDto){
         User principal = (User)session.getAttribute("principal");
         if( principal == null ){
-            throw new CustomException("로그인이 필요한 페이지 입니다");
+            throw new CustomException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED);
         }
-        int result = boardService.글수정하기(BoardSaveReqDto, userId, principal.getId());
-        if( result != 1){
-            throw new CustomException("글 수정에 실패 했습니다.");
+        if ( boardUpdateRqeDto.getTitle() == null || boardUpdateRqeDto.getTitle().isEmpty() ){
+            throw new CustomException("글 제목이 없습니다.");
         }
+        if ( boardUpdateRqeDto.getContent() == null || boardUpdateRqeDto.getContent().isEmpty() ){
+            throw new CustomException("글 내용이 없습니다.");
+        }
+        boardService.글수정하기(boardUpdateRqeDto, principal.getId());
+        
         return Script.href("/board/"+id);
     }
 

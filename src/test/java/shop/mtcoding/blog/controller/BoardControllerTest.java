@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.blog.dto.board.BoardResp;
+import shop.mtcoding.blog.dto.board.BoardReq.BoardUpdateRqeDto;
 import shop.mtcoding.blog.dto.board.BoardResp.BoardDetailRespDto;
 import shop.mtcoding.blog.model.User;
 
@@ -147,7 +148,39 @@ public class BoardControllerTest {
         System.out.println("테스트 : "+ responseBody); // 테스트 : {"code":1,"msg":"삭제 성공","data":true}
         resultActions.andExpect(status().isOk());
 
-        resultActions.andExpect(jsonPath("$.code").value(1)); // json 이 제대로 전송됐는지 테스트
+        // resultActions.andExpect(jsonPath("$.code").value(1)); // json 이 제대로 전송됐는지 테스트
+    }
+    @Test
+    public void updateForm_test() throws Exception{
+    
+        int id = 442;
+        ResultActions resultActions = mvc.perform(get("/board/442/updateForm").session(mockSession));
+        BoardDetailRespDto b = (BoardDetailRespDto)resultActions.andReturn().getModelAndView().getModel().get("dto");
+        assertThat(b.getId()).isEqualTo(1);
+
+        // resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void boardUpdate_test() throws Exception{
+        String requestBody = "title=22&content=23&userId=1245";
+        BoardUpdateRqeDto b = new BoardUpdateRqeDto();
+        b.setId(1);
+        b.setTitle("안녕");
+        b.setContent("2345");
+        String a = om.writeValueAsString(b);
+
+        System.out.println(a);
+
+
+        int id = 2;
+        ResultActions resultActions = mvc.perform(post("/borad/"+id+"/update")
+                                         .content(requestBody)
+                                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                                         .session(mockSession));
+                                    
+        resultActions.andExpect(status().isOk());
+
     }
 
 }

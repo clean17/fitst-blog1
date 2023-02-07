@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog.dto.board.BoardReq.BoardSaveReqDto;
+import shop.mtcoding.blog.dto.board.BoardReq.BoardUpdateRqeDto;
 import shop.mtcoding.blog.dto.board.BoardResp.BoardDetailRespDto;
 import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
@@ -19,24 +20,27 @@ public class BoardService {
     private BoardRepository boardRepository;
     
     @Transactional
-    public int 글수정하기(BoardSaveReqDto BoardSaveReqDto, int userId, int principalId) {
-        if ( userId != principalId){
-            throw new CustomException("글 수정 권한이 없습니다.");
+    public void 글수정하기(BoardUpdateRqeDto boardUpdateRqeDto, int principalId) {
+        if ( boardUpdateRqeDto.getUserId() != principalId){
+            throw new CustomException("글 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
-        BoardDetailRespDto board = boardRepository.findByIdWithUser(BoardSaveReqDto.getId());
+        Board board = boardRepository.findbyId(boardUpdateRqeDto.getId());
         if (board == null) {
-            throw new CustomException("해당 글이 없습니다.");
+            throw new CustomException("존재하지 않은 글을 수정할 수 없습니다.");
         }
-        if ( BoardSaveReqDto.getTitle() == null || BoardSaveReqDto.getTitle().isEmpty() ){
-            throw new CustomException("글 제목이 없습니다.");
+        try {
+            boardRepository.updateBoard(
+                boardUpdateRqeDto.getTitle(), 
+                boardUpdateRqeDto.getContent(),
+                boardUpdateRqeDto.getId());
+        } catch (Exception e) {
+            throw new CustomApiException("서버에 일시적인 문제가 생겼습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if ( BoardSaveReqDto.getContent() == null || BoardSaveReqDto.getContent().isEmpty() ){
-            throw new CustomException("글 내용이 없습니다.");
-        }
-        return boardRepository.updateBoard(
-            BoardSaveReqDto.getTitle(), 
-            BoardSaveReqDto.getContent(),
-            BoardSaveReqDto.getId());
+        
+        // boardRepository.updateBoard(
+        //     boardUpdateRqeDto.getTitle(), 
+        //     boardUpdateRqeDto.getContent(),
+        //     boardUpdateRqeDto.getId());
     }
 
     @Transactional

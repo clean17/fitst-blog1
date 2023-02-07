@@ -10,8 +10,7 @@
             <div class="form-group">
                 <textarea class="form-control summernote" rows="5" name="content">${dto.content}</textarea>
             </div>
-                <input type="hidden" name="id" value="${dto.id}">
-                <input type="hidden" name="userId" value="${principal.id}">
+                <input type="hidden" name="userId" value="${dto.id}">
         <button type="submit" class="btn btn-primary">글수정완료</button>
         </form>
     </div>

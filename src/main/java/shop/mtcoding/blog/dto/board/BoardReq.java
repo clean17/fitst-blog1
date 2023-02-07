@@ -12,4 +12,13 @@ public class BoardReq {
         private String title;
         private String content;  // 문자라고 가정
     }
+
+    @Getter
+    @Setter
+    public static class BoardUpdateRqeDto{
+        private int id;
+        private String title;
+        private String content;
+        private int userId;
+    }
 }

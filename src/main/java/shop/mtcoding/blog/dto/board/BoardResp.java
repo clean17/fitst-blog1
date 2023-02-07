@@ -33,5 +33,6 @@ public class BoardResp {
         private String content;
         private String username;
         private int userId;
+        private Timestamp createdAt;
     }
 }
