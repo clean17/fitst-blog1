@@ -1,8 +1,10 @@
 package shop.mtcoding.blog.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import javax.servlet.http.HttpSession;
@@ -61,7 +63,7 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         // then
         resultActions.andExpect(status().is3xxRedirection());
-    }
+    }   
 
     @Test
     public void login_test() throws Exception {

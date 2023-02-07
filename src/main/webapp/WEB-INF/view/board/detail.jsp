@@ -2,24 +2,24 @@
 <%@ include file="../layout/header.jsp" %>
 
     <div class="container my-3">
-    <c:if test="${principal.username == board.username}" >
+    <c:if test="${principal.id == dto.userId}" >
     <div class="mb-3">
-            <a href="/board/${board.id}/updateForm" class="btn btn-warning">수정</a>
+            <a href="/board/${dto.id}/updateForm" class="btn btn-warning">수정</a>
             <button id="btn-delete" class="btn btn-danger" onclick="deleteBoard()">삭제</button>
         </div>
     </c:if>
         
 
         <div class="mb-2">
-            글 번호 : <span id="id">${board.id}<i> </i></span> 작성자 : <span class="me-3"><i>${board.username} </i></span> 
+            글 번호 : <span id="id">${dto.id}<i> </i></span> 작성자 : <span class="me-3"><i>${dto.username} </i></span> 
             <i id="heart" class="fa-regular fa-heart my-xl my-cursor"></i>
         </div>
         <div>
-            <h3>${board.title}</h3>
+            <h3>${dto.title}</h3>
         </div>
         <hr />
         <div>
-            <div>${board.content}</div>
+            <div>${dto.content}</div>
         </div>
         <hr />
         <div class="card">

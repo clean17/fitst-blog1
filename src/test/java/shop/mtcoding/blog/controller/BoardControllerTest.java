@@ -1,10 +1,14 @@
 package shop.mtcoding.blog.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +21,10 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import shop.mtcoding.blog.dto.board.BoardResp;
+import shop.mtcoding.blog.dto.board.BoardResp.BoardDetailRespDto;
 import shop.mtcoding.blog.model.User;
 
 // // 매번 로그인할 필요없이.. 포스트맨 날릴필요없이 여기서 테스트하자 !!!!!!!!!!!
@@ -55,6 +63,12 @@ public class BoardControllerTest {
 
     private MockHttpSession mockSession;
 
+
+    /// 여기부터 오늘
+
+    @Autowired
+    private ObjectMapper om;
+
     @BeforeEach  //  모든 test 메소드 실행 직전 마다 호출된다 ( 추가햇음 ) 이걸로 모든 테스트에 세션 주입
                 // MOCK 세션 생성 - 이용
     public void setUp(){
@@ -68,6 +82,23 @@ public class BoardControllerTest {
         mockSession = new MockHttpSession();
         mockSession.setAttribute("principal", user);
     }
+    
+    @Test
+    public void main_test() throws Exception{
+        //given        
+        //when
+            ResultActions resultActions = mvc.perform(get("/"));
+
+            Map<String, Object> map = resultActions.andReturn().getModelAndView().getModel();
+            List<BoardResp.BoardMainRespDto> dtos = (List<BoardResp.BoardMainRespDto>) map.get("boardList");
+
+            String responsebody = om.writeValueAsString(dtos);
+            System.out.println("테스트 " + responsebody);
+        //then
+        // resultActions.andExpect(status().isOk());
+        assertThat(dtos.size()).isEqualTo(6);
+        assertThat(dtos.get(0).getId()).isEqualTo(1);
+    }   
 
     @Test
     public void save_test() throws Exception {
@@ -90,43 +121,19 @@ public class BoardControllerTest {
         // then
         resultActions.andExpect(status().is3xxRedirection());
     }
+
+    @Test
+    public void detail_test() throws Exception{        
+        int responseBody = 1;
+
+        ResultActions resultActions = mvc.perform(get("/board/"+responseBody));
+        // resultActions.andExpect(status().isOk());
+        Map<String, Object> map = resultActions.andReturn().getModelAndView().getModel();
+        BoardDetailRespDto ddd = (BoardDetailRespDto) map.get("dto");
+        assertThat(ddd.getId()).isEqualTo(1);
+        assertThat(ddd.getUsername()).isEqualTo("ssar");
+    }
 }
-
-// @AutoConfigureMockMvc
-// @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-// public class BoardControllerTest {
-
-//     @Autowired
-//     private MockMvc mvc; // @AutoConfigureMockMvc 가 DI 를 해줌
-
-//     private MockHttpSession session;
-
-//     @Test
-//     public void save_test() throws Exception {
-//         // given
-//         User user = new User();
-//         user.setId(1);
-//         user.setUsername("ssar");
-//         user.setPassword("1234");
-//         user.setEmail("ssar@nate.com");
-//         user.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-
-//         session = new MockHttpSession();
-//         session.setAttribute("principal", user);
-
-//         // 그냥 실행하면 세션이 없어서 302를 리턴하지 못한다
-//         String requestBody = "title=제목1&content=내용1"; // 이렇게 넘기면 스프링의 기본 파싱전락에 의해서 key=value 형태로 메소드가 받아 먹음
-
-//         // when
-//         ResultActions resultActions = mvc.perform(post("/board/Write")
-//                 .content(requestBody)
-//                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-//                 .session(session));
-//         // then
-//         resultActions.andExpect(status().is3xxRedirection());
-//     }
-// }
-
 
 // @AutoConfigureMockMvc
 // @SpringBootTest(webEnvironment = WebEnvironment.MOCK)

@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import shop.mtcoding.blog.dto.board.BoardReq.BoardSaveReqDto;
 import shop.mtcoding.blog.dto.ResponseDto;
+import shop.mtcoding.blog.dto.board.BoardReq.BoardSaveReqDto;
 import shop.mtcoding.blog.dto.board.BoardResp;
+import shop.mtcoding.blog.dto.board.BoardResp.BoardDetailRespDto;
 import shop.mtcoding.blog.dto.reply.ReplyDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.BoardRepository;
@@ -45,12 +46,11 @@ public class BoardController {
     @Autowired
     private ReplyRepository replyRepository;
 
-    @GetMapping("/")
+    @GetMapping({"/","board"})
     public String main(Model model){
         // User principal = userRepository.findByUsernameAndPassword("ssar", "1234");
         // session.setAttribute("principal", principal);
-        List<BoardResp.BoardMainRespDto> boardList = boardRepository.findAllWithUser();
-        model.addAttribute("boardList", boardList);    
+        model.addAttribute("boardList", boardRepository.findAllWithUser());    
         return "user/main" ;
     }
     @GetMapping("/board/writeForm")
@@ -59,18 +59,18 @@ public class BoardController {
     }
     @GetMapping("/board/{id}")
     public String detail(@PathVariable int id, Model model){
-        BoardResp.BoardDto board = boardRepository.findById(id);
-        if ( board == null ){
+        BoardDetailRespDto dto = boardRepository.findByIdWithUser(id);
+        if ( dto == null ){
             return "redirect:/errorpage";
         }
         List<ReplyDto> replyList = replyRepository.findAll();
-        model.addAttribute("board", board);
+        model.addAttribute("dto", dto);
         model.addAttribute("replyList", replyList);
         return "board/detail";
     }
     @GetMapping("/board/{id}/updateForm")
     public String updateForm(@PathVariable int id, Model model){
-        BoardResp.BoardDto board = boardRepository.findById(id);
+        BoardResp.BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
         if ( board == null ){
             return "redirect:/errorpage";
         }
@@ -107,7 +107,7 @@ public class BoardController {
     //     if( result != 1){
     //         return new ResponseDto<>( 1, "글 수정을 실패했습니다.",false);
     //     }
-    //     BoardDto board = boardRepository.findById(id);
+    //     BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
     //     model.addAttribute("board", board);
     //     return new ResponseDto<>( 1, "수정 완료",true);
     // }
@@ -147,7 +147,7 @@ public class BoardController {
         if( principal == null ){
             return new ResponseDto<>( 0, "로그인이 필요한 페이지입니다",null);
         }
-        BoardResp.BoardDto board = boardRepository.findById(id);
+        BoardResp.BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
         if (board == null) {
             return new ResponseDto<>( -1, "글이 존재하지 않습니다.",null);
         }

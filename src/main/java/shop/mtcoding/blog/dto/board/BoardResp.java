@@ -24,4 +24,14 @@ public class BoardResp {
         private String username;
         private Timestamp createdAt;
     }
+
+    @Getter
+    @Setter
+    public static class BoardDetailRespDto {
+        private int id;
+        private String title;
+        private String username;
+        private String content;
+        private int userId;
+    }
 }

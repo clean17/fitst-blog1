@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog.dto.board.BoardReq.BoardSaveReqDto;
 import shop.mtcoding.blog.dto.board.BoardResp;
-import shop.mtcoding.blog.dto.board.BoardResp.BoardDto;
+import shop.mtcoding.blog.dto.board.BoardResp.BoardDetailRespDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.BoardRepository;
 
@@ -16,13 +16,13 @@ public class BoardService {
 
     @Autowired
     private BoardRepository boardRepository;
-
+    
     @Transactional
     public int 글수정하기(BoardSaveReqDto BoardSaveReqDto, int userId, int principalId) {
         if ( userId != principalId){
             throw new CustomException("글 수정 권한이 없습니다.");
         }
-        BoardDto board = boardRepository.findById(BoardSaveReqDto.getId());
+        BoardDetailRespDto board = boardRepository.findByIdWithUser(BoardSaveReqDto.getId());
         if (board == null) {
             throw new CustomException("해당 글이 없습니다.");
         }
@@ -40,7 +40,7 @@ public class BoardService {
 
     @Transactional
     public int 글삭제하기(int id, String username) {
-        BoardResp.BoardDto board = boardRepository.findById(id);
+        BoardResp.BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
         if (board == null) { return -1; }      
         if (!board.getUsername().equalsIgnoreCase(username)) { return -1;}
         return boardRepository.deleteBoard(id);

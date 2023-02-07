@@ -14,9 +14,10 @@
             from board_tb b 
     </select>
     
-    <select id="findById" resultType="shop.mtcoding.blog.dto.board.BoardResp$BoardDto">
+    <select id="findByIdWithUser" resultType="shop.mtcoding.blog.dto.board.BoardResp$BoardDetailRespDto">
         select id, title, content,
-        ( select username from user_tb where id = b.user_id ) as username,
+        b.user_id,
+        ( select username from user_tb where id = b.user_id ) as username,        
         created_at
         from board_tb b
         where id = #{id}
