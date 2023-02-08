@@ -1,5 +1,9 @@
 package shop.mtcoding.blog.service;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,6 +15,7 @@ import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
+import shop.mtcoding.blog.util.Thumbnail;
 
 @Transactional( readOnly =  true) // 트랜잭션 안붙으면 이게 자동으로 생성
 @Service
@@ -28,9 +33,11 @@ public class BoardService {
         if ( boardPS.getUserId() != principalId){
             throw new CustomException("글 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
+        String thumbnail = Thumbnail.썸네일추출(bu.getContent());
         int result = boardRepository.updateBoard(
             bu.getTitle(),
             bu.getContent(),
+            thumbnail,            
             boardPS.getId());
         if (result != 1) {
             throw new CustomApiException("게시글 수정에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -72,16 +79,17 @@ public class BoardService {
     // }
 
     // where 절에 걸리는 파라미터를 앞에서 받자
-    @Transactional
+    // @Transactional
     public void 글쓰기(BoardSaveReqDto boardSaveReqDto, int userId){
+        String thumbnail = Thumbnail.썸네일추출(boardSaveReqDto.getContent());
+
         int result = boardRepository.insertBoard(
                     boardSaveReqDto.getTitle(), 
-                    boardSaveReqDto.getContent(), 
+                    boardSaveReqDto.getContent(),
+                    thumbnail,
                     userId);
         if ( result != 1 ){
             throw new CustomException("글 쓰기에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-            // 글쓰기 실패는 서버의 오류 -> 500 번대의 오류 
-            // 글을 너무 길게 넣으면 컨트롤러에서 잘라야함 -> 400 번대 오류
         }       
     }
 }

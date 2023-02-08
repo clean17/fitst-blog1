@@ -9,7 +9,8 @@ public class BoardReq {
     @Setter
     public static class BoardSaveReqDto{
         private String title;
-        private String content;  // 문자라고 가정
+        private String content;
+
     }
 
     @Getter

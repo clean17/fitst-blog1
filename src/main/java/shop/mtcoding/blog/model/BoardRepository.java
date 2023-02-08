@@ -13,6 +13,7 @@ public interface BoardRepository {
     public int insertBoard(
         @Param("title") String title,
         @Param("content") String content,
+        @Param("thumbnail") String thumbnail,
         @Param("userId") int userId
     );
     public int deleteBoard(int id); 
@@ -20,6 +21,7 @@ public interface BoardRepository {
     public int updateBoard(
         @Param("title") String title,
         @Param("content") String content,
+        @Param("thumbnail") String thumbnail,
         @Param("id") int id
     );
     public List<Board> findAll();

@@ -13,7 +13,7 @@
     </select>
 
     <select id="findAllWithUser" resultType="shop.mtcoding.blog.dto.board.BoardResp$BoardMainRespDto">
-        select id, title, 
+        select id, title, thumbnail,
             ( select username from user_tb where id = b.user_id ) username 
             from board_tb b 
     </select>
@@ -28,8 +28,8 @@
     </select>
 
     <insert id="insertBoard">
-        insert into board_tb ( title, content, user_id, created_at) 
-            values ( #{title}, #{content}, #{userId}, now())
+        insert into board_tb ( title, content, user_id, thumbnail, created_at) 
+            values ( #{title}, #{content}, #{userId}, #{thumbnail}, now())
     </insert>
 
     <delete id="deleteBoard">
@@ -37,8 +37,6 @@
     </delete>
 
     <update id="updateBoard">
-        update board_tb set title=#{title}, content=#{content} where id=#{id}
-
-    
+        update board_tb set title=#{title}, content=#{content}, thumbnail=#{thumbnail} where id=#{id}
     </update>
 </mapper>

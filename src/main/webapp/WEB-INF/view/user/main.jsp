@@ -5,7 +5,8 @@
         <div class="my-grid">
         <c:forEach items="${boardList}" var="board">
             <div class="card">
-                <img class="card-img-top" src="images/profile.jpeg" alt="Card image">
+                <img class="card-img-top" src="${board.thumbnail}" alt="Card image">
+                <hr>
                 <div class="card-body">
                     <div>작성자 : ${board.username} </div>
                     <h4 class="card-title my-text-ellipsis">${board.title}</h4>

@@ -9,12 +9,12 @@
         </div>
     <%-- </c:if> --%>
 
-        <div class="mb-2">
-            글 번호 : <span id="id">${dto.id}<i> </i></span> 작성자 : <span class="me-3"><i>${dto.username} </i></span> 
+        <div class="mb-2 d-flex justify-content-end">
+            글 번호 : &nbsp<span id="id">${dto.id}<i>&nbsp&nbsp&nbsp&nbsp </i></span> 작성자 : &nbsp<span class="me-3"><i>${dto.username} </i></span> 
             <i id="heart" class="fa-regular fa-heart my-xl my-cursor"></i>
         </div>
         <div>
-            <h3>${dto.title}</h3>
+            <h1><b>${dto.title}</b></h1>
         </div>
         <hr />
         <div>
