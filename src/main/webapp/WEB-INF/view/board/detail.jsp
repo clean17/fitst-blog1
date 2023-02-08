@@ -2,12 +2,12 @@
 <%@ include file="../layout/header.jsp" %>
 
     <div class="container my-3">
-    <c:if test="${principal.id == dto.userId}" >
+    <%-- <c:if test="${principal.id == dto.userId}" > --%>
         <div class="mb-3">
             <a href="/board/${dto.id}/updateForm" class="btn btn-warning">수정</a>
             <button type="button" onclick="deleteBoard(${dto.id})" class="btn btn-danger">삭제</button>
         </div>
-    </c:if>
+    <%-- </c:if> --%>
 
         <div class="mb-2">
             글 번호 : <span id="id">${dto.id}<i> </i></span> 작성자 : <span class="me-3"><i>${dto.username} </i></span> 
@@ -53,7 +53,7 @@
         function deleteBoard(id) {  // 스크립트에 el표현식을 사용하지 마라 !!! 나중에 자바스크립트를 파일로 추출할때 안 먹힌다.
             $.ajax({
                 type: "delete",
-                url: `/board/${id}`,
+                url: "/board/"+id,
                 dataType:"json"
             }).done((res) => { // 2xx 일때
                 console.dir(res);

@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog.dto.board.BoardReq.BoardSaveReqDto;
 import shop.mtcoding.blog.dto.board.BoardReq.BoardUpdateRqeDto;
-import shop.mtcoding.blog.dto.board.BoardResp.BoardDetailRespDto;
 import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
 
+@Transactional( readOnly =  true) // 트랜잭션 안붙으면 이게 자동으로 생성
 @Service
 public class BoardService {
 
@@ -20,27 +20,22 @@ public class BoardService {
     private BoardRepository boardRepository;
     
     @Transactional
-    public void 글수정하기(BoardUpdateRqeDto boardUpdateRqeDto, int principalId) {
-        if ( boardUpdateRqeDto.getUserId() != principalId){
+    public void 글수정하기(BoardUpdateRqeDto bu, int id, int principalId) {
+        Board boardPS = boardRepository.findbyId(id);
+        if ( boardPS == null ){
+            throw new CustomApiException("해당 게시글을 찾을 수가 없습니다.");
+        }
+        if ( boardPS.getUserId() != principalId){
             throw new CustomException("글 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
-        Board board = boardRepository.findbyId(boardUpdateRqeDto.getId());
-        if (board == null) {
-            throw new CustomException("존재하지 않은 글을 수정할 수 없습니다.");
+        int result = boardRepository.updateBoard(
+            bu.getTitle(),
+            bu.getContent(),
+            boardPS.getId());
+        if (result != 1) {
+            throw new CustomApiException("게시글 수정에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        try {
-            boardRepository.updateBoard(
-                boardUpdateRqeDto.getTitle(), 
-                boardUpdateRqeDto.getContent(),
-                boardUpdateRqeDto.getId());
-        } catch (Exception e) {
-            throw new CustomApiException("서버에 일시적인 문제가 생겼습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        
-        // boardRepository.updateBoard(
-        //     boardUpdateRqeDto.getTitle(), 
-        //     boardUpdateRqeDto.getContent(),
-        //     boardUpdateRqeDto.getId());
+     
     }
 
     @Transactional
@@ -62,28 +57,7 @@ public class BoardService {
             // 
         }
     }
-    // , String username
-    // ) {
-        // BoardResp.BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
-        // if (board == null) { return -1; }      
-        // if (!board.getUsername().equalsIgnoreCase(username)) { return -1;}
-        // return boardRepository.deleteBoard(id);
-
-        /* 
-         *  BoardDto board = boardRepository.findById(id);
-        if (board == null) {
-            return new ResponseDto<>( -1, "글이 존재하지 않습니다.",null);
-        }
-        if (!board.getUsername().equalsIgnoreCase(principal.getUsername())) {
-            return new ResponseDto<>( -1, "글 삭제 권한이 없습니다.",null);
-        }
-        int result = boardService.글삭제하기(id, principal.getUsername());
-        if ( result != 1 ){
-            return new ResponseDto<>(1, "글 삭제를 실패했습니다.",false);
-        }
-        return new ResponseDto<>(1, "삭제 완료",true);            
-         */
-    // }
+   
 
     // @Transactional
     // public int 글쓰기(BoardSaveReqDto boardSaveReqDto, int userId) {

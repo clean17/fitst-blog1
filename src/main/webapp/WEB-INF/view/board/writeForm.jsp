@@ -9,7 +9,6 @@
             <div class="form-group">
                 <textarea class="form-control summernote" rows="5" name="content" value=""></textarea>
             </div>
-                <input type="hidden" name="id" value="${principal.id}">
             <button type="submit" class="btn btn-primary">글쓰기완료</button>
         </form>
     </div>

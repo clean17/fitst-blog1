@@ -8,7 +8,6 @@ public class BoardReq {
     @Getter
     @Setter
     public static class BoardSaveReqDto{
-        private int id;
         private String title;
         private String content;  // 문자라고 가정
     }
@@ -16,9 +15,7 @@ public class BoardReq {
     @Getter
     @Setter
     public static class BoardUpdateRqeDto{
-        private int id;
         private String title;
         private String content;
-        private int userId;
     }
 }

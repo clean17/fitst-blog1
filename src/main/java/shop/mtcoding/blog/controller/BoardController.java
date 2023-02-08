@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blog.dto.ResponseDto;
@@ -22,6 +24,7 @@ import shop.mtcoding.blog.dto.board.BoardResp.BoardDetailRespDto;
 import shop.mtcoding.blog.dto.reply.ReplyDto;
 import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
+import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.ReplyRepository;
 import shop.mtcoding.blog.model.User;
@@ -44,16 +47,16 @@ public class BoardController {
     @Autowired
     private ReplyRepository replyRepository;
 
-    // private void mockSession(){
-    //     User user = new User();
-    //     user.setId(1);
-    //     user.setUsername("ssar");
-    //     session.setAttribute("principal", user);
-    // }
+    private void mockSession(){
+        User user = new User();
+        user.setId(1);
+        user.setUsername("ssar");
+        session.setAttribute("principal", user);
+    }
 
     @GetMapping({"/","board"})
     public String main(Model model){
-        // mockSession();
+        mockSession();
         model.addAttribute("boardList", boardRepository.findAllWithUser());    
         return "user/main" ;
     }
@@ -78,52 +81,62 @@ public class BoardController {
         if( principal == null ){
             throw new CustomException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED);
         }
-        BoardDetailRespDto dto = boardRepository.findByIdWithUser(id);
-        if ( dto == null ){
-            // return "redirect:/errorpage";
+        Board boardPS = boardRepository.findbyId(id);
+        if ( boardPS == null ){
             throw new CustomException("존재하지 않는 게시글입니다.");
         }
-        model.addAttribute("dto", dto);
+        if ( principal.getId() != boardPS.getUserId()){
+            throw new CustomException("게시글을 수정할 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+        model.addAttribute("board", boardPS);
         return "board/updateForm";
     }
 
-    @PostMapping("/borad/{id}/update")
-    @ResponseBody
-    public String boardUpdate(@PathVariable int id ,BoardUpdateRqeDto boardUpdateRqeDto){
-        User principal = (User)session.getAttribute("principal");
-        if( principal == null ){
-            throw new CustomException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED);
-        }
-        if ( boardUpdateRqeDto.getTitle() == null || boardUpdateRqeDto.getTitle().isEmpty() ){
-            throw new CustomException("글 제목이 없습니다.");
-        }
-        if ( boardUpdateRqeDto.getContent() == null || boardUpdateRqeDto.getContent().isEmpty() ){
-            throw new CustomException("글 내용이 없습니다.");
-        }
-        boardService.글수정하기(boardUpdateRqeDto, principal.getId());
-        
-        return Script.href("/board/"+id);
-    }
-
-    // @PutMapping("/borad/{id}/update")
+    // @PostMapping("/borad/{id}/update")
     // @ResponseBody
-    // public ResponseDto<?> boardUpdate(@PathVariable int id, 
-    //     @RequestBody Map<String, Object> param, Model model){
-    //     String title = param.get("title").toString();
-    //     String content = param.get("content").toString();
-
+    // public String boardUpdate(@PathVariable int id ,BoardUpdateRqeDto boardUpdateRqeDto){
     //     User principal = (User)session.getAttribute("principal");
     //     if( principal == null ){
-    //        return new ResponseDto<>( -1, "로그인이 필요한 페이지입니다",null);
+    //         throw new CustomException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED);
     //     }
-    //     int result = boardService.글수정하기(title, content, id, principal.getUsername());
-    //     if( result != 1){
-    //         return new ResponseDto<>( 1, "글 수정을 실패했습니다.",false);
+    //     if ( boardUpdateRqeDto.getTitle() == null || boardUpdateRqeDto.getTitle().isEmpty() ){
+    //         throw new CustomException("글 제목이 없습니다.");
     //     }
-    //     BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
-    //     model.addAttribute("board", board);
-    //     return new ResponseDto<>( 1, "수정 완료",true);
+    //     if ( boardUpdateRqeDto.getContent() == null || boardUpdateRqeDto.getContent().isEmpty() ){
+    //         throw new CustomException("글 내용이 없습니다.");
+    //     }
+    //     boardService.글수정하기(boardUpdateRqeDto, principal.getId());
+        
+    //     return Script.href("/board/"+id);
     // }
+
+    @PutMapping("/borad/{id}")
+    @ResponseBody
+    public ResponseEntity<?> boardUpdate(@PathVariable int id, @RequestBody BoardUpdateRqeDto bu){
+        /* @RequestBody BoardUpdateRqeDto 은 내부적으로 ObjectMapper 의 readValue(json, BoardUpdateRqeDto.class) 가 작동한다 */
+        // 또다른 방법으로는 @RequestBody Map<String, Object> param
+        // String title = (String)param.get("title");
+        // String content = (String)param.get("content");
+        // System.out.println(bu.getTitle());
+        // System.out.println(bu.getContent());
+
+        User principal = (User)session.getAttribute("principal");
+        if( principal == null ){
+            throw new CustomApiException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED);
+        }
+        if (bu.getTitle() == null || bu.getTitle().isEmpty()) {
+            throw new CustomApiException("글 제목이 없습니다.");
+        }
+        if (bu.getContent() == null || bu.getContent().isEmpty()) {
+            throw new CustomApiException("글 내용이 없습니다.");
+        }
+
+        boardService.글수정하기(bu, id, principal.getId());
+       
+        // BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
+        return new ResponseEntity<>(new ResponseDto<>( 1, "수정 완료",null), HttpStatus.OK);
+        // return null;
+    }
 
     ////////////////////////  글쓰기
     @PostMapping("/board/Write")
@@ -159,7 +172,7 @@ public class BoardController {
         // 스크립트를 리턴하기 위해 ResponseEntity<?> 를 사용 //
         User principal = (User)session.getAttribute("principal");
         if( principal == null ){
-            throw new CustomApiException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED); 
+            throw new CustomApiException("로그인이 필요한 기능입니다", HttpStatus.UNAUTHORIZED); 
             // 리턴 <script>alert('로그인이 필요한 페이지 입니다');history.back();</script>
         }
         boardService.글삭제하기(id, principal.getId());
