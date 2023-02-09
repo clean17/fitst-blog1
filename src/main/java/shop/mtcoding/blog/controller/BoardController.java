@@ -29,7 +29,6 @@ import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.ReplyRepository;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.service.BoardService;
-import shop.mtcoding.blog.util.Script;
 
 @Controller
 public class BoardController {
@@ -119,7 +118,6 @@ public class BoardController {
         // String content = (String)param.get("content");
         // System.out.println(bu.getTitle());
         // System.out.println(bu.getContent());
-
         User principal = (User)session.getAttribute("principal");
         if( principal == null ){
             throw new CustomApiException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED);
@@ -130,38 +128,56 @@ public class BoardController {
         if (bu.getContent() == null || bu.getContent().isEmpty()) {
             throw new CustomApiException("글 내용이 없습니다.");
         }
-
         boardService.글수정하기(bu, id, principal.getId());
-       
-        // BoardDetailRespDto board = boardRepository.findByIdWithUser(id);
         return new ResponseEntity<>(new ResponseDto<>( 1, "수정 완료",null), HttpStatus.OK);
-        // return null;
     }
 
     ////////////////////////  글쓰기
+    // @PostMapping("/board/Write")
+    // @ResponseBody
+    // public String boardWrite(BoardSaveReqDto boardSaveReqDto){
+    //     User principal = (User)session.getAttribute("principal");
+    //     if( principal == null ){
+    //         throw new CustomException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED); 
+    //              // 인증이 안돼었으면 401을 리턴해야한다 // 403 은 권한이 없을때 리턴해야한다.
+    //     }
+    //     if ( boardSaveReqDto.getTitle() == null || boardSaveReqDto.getTitle().isEmpty() ){
+    //         throw new CustomException("글 제목이 없습니다.");
+    //     }
+    //     if ( boardSaveReqDto.getTitle().length() > 100 ){
+    //         throw new CustomException("제목의 허용길이 100자를 초과했습니다.");
+    //     }
+    //     if ( boardSaveReqDto.getContent() == null || boardSaveReqDto.getContent().isEmpty() ){
+    //         throw new CustomException("글 내용이 없습니다.");
+    //     }
+    //     // 이렇게 로직으로 모든걸 막아야하는데.. 자바스크립트도 막고 뭐도 막고,,,
+    //     // 이런 작업을 AOP 란것을 이용해서 나중에 편하게 할수가 있다
+        
+    //     // 컨트롤러의 유효성 검사 받아온 파라미터가 존재하는지는 컨트롤러에서 걸러본다...
+    //     boardService.글쓰기(boardSaveReqDto, principal.getId());         
+    //     return Script.href("/");
+    // }
+
+
+    //ajax로 받는다면
     @PostMapping("/board/Write")
-    @ResponseBody
-    public String boardWrite(BoardSaveReqDto boardSaveReqDto){
+    public ResponseEntity<?> boardWrite(@RequestBody BoardSaveReqDto boardSaveReqDto){
         User principal = (User)session.getAttribute("principal");
         if( principal == null ){
-            throw new CustomException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED); 
-                 // 인증이 안돼었으면 401을 리턴해야한다 // 403 은 권한이 없을때 리턴해야한다.
+            throw new CustomApiException("로그인이 필요한 페이지 입니다", HttpStatus.UNAUTHORIZED); 
         }
         if ( boardSaveReqDto.getTitle() == null || boardSaveReqDto.getTitle().isEmpty() ){
-            throw new CustomException("글 제목이 없습니다.");
+            throw new CustomApiException("글 제목이 없습니다.");
         }
         if ( boardSaveReqDto.getTitle().length() > 100 ){
-            throw new CustomException("제목의 허용길이 100자를 초과했습니다.");
+            throw new CustomApiException("제목의 허용길이 100자를 초과했습니다.");
         }
         if ( boardSaveReqDto.getContent() == null || boardSaveReqDto.getContent().isEmpty() ){
-            throw new CustomException("글 내용이 없습니다.");
+            throw new CustomApiException("글 내용이 없습니다.");
         }
-        // 이렇게 로직으로 모든걸 막아야하는데.. 자바스크립트도 막고 뭐도 막고,,,
-        // 이런 작업을 AOP 란것을 이용해서 나중에 편하게 할수가 있다
-        
-        // 컨트롤러의 유효성 검사 받아온 파라미터가 존재하는지는 컨트롤러에서 걸러본다...
         boardService.글쓰기(boardSaveReqDto, principal.getId());         
-        return Script.href("/");
+        // return Script.href("/");
+        return new ResponseEntity<>(new ResponseDto<>(1, "글 쓰기 성공", true),HttpStatus.OK);
     }
 
 

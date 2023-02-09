@@ -4,8 +4,8 @@
     <div class="container my-3 ">
         <div class="my-grid">
         <c:forEach items="${boardList}" var="board">
-            <div class="card">
-                <img class="card-img-top" src="${board.thumbnail}" alt="Card image">
+            <div class="card pt-3">
+                <img class="card-img-top " src="${board.thumbnail}" alt="Card image">
                 <hr>
                 <div class="card-body">
                     <div>작성자 : ${board.username} </div>

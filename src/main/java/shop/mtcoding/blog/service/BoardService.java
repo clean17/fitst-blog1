@@ -15,7 +15,7 @@ import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
-import shop.mtcoding.blog.util.Thumbnail;
+import shop.mtcoding.blog.util.HtmlParser;
 
 @Transactional( readOnly =  true) // 트랜잭션 안붙으면 이게 자동으로 생성
 @Service
@@ -33,7 +33,7 @@ public class BoardService {
         if ( boardPS.getUserId() != principalId){
             throw new CustomException("글 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
-        String thumbnail = Thumbnail.썸네일추출(bu.getContent());
+        String thumbnail = HtmlParser.getThumbnail(bu.getContent());
         int result = boardRepository.updateBoard(
             bu.getTitle(),
             bu.getContent(),
@@ -81,7 +81,7 @@ public class BoardService {
     // where 절에 걸리는 파라미터를 앞에서 받자
     // @Transactional
     public void 글쓰기(BoardSaveReqDto boardSaveReqDto, int userId){
-        String thumbnail = Thumbnail.썸네일추출(boardSaveReqDto.getContent());
+        String thumbnail = HtmlParser.getThumbnail(boardSaveReqDto.getContent());
 
         int result = boardRepository.insertBoard(
                     boardSaveReqDto.getTitle(), 

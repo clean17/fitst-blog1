@@ -5,8 +5,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class Thumbnail {
-    public static String 썸네일추출(String object){
+public class HtmlParser {
+    public static String getThumbnail(String object){
         String img = "";
         Document doc = Jsoup.parse(object); 
         Elements els = doc.select("img"); 

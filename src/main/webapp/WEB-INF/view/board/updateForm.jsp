@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp" %>
 
+
     <div class="container my-3">
         <!-- <form action="/borad/${board.id}/update" method="post"> -->
         <form>
@@ -25,6 +26,7 @@
                 title: $('#title').val(),
                 content: $('#content').val(),
             }
+            // js 오브젝트  key=value 
             $.ajax({
                 type: "put",
                 url: "/borad/"+id,
@@ -36,6 +38,7 @@
                     contentType:"application/json; charset=utf-8"
                 ,
                 dataType:"json"
+                
             }).done((res) => {
                 alert(res.msg);
                 location.href="/board/"+id;
